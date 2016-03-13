@@ -1,0 +1,26 @@
+[
+    {
+        "id": "SOURCE_NODE_ID"
+        "next_hops": [
+            {
+                "id": "DEST_NODE_ID",
+                "addr": "IP_ADDRESS",
+                "hostname": "HOSTNAME",
+                "port": "PORT",
+                "uris": ["URI_1", "URI_2", "..."]
+                "stats": "In the future, we'll put stats local to the ip address here"
+            },
+            {
+                "id": "DEST_NODE_ID",
+                "hostname": "HOSTNAME",
+                "addr": "IP_ADDRESS",
+                "port": "PORT",
+                "uris": ["URI_1", "URI_2", "..."]
+                "stats": "In the future, we'll put stats local to the ip address here"
+            }
+        ],
+        "description": "As the controller parses this object, it will take note of the id and send a SETUP message with the contents of <next_hops> to the appropriate node",
+        "stats": "In the future, we'll put stats local to all next-hops here"
+    },
+    "..."
+]

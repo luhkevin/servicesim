@@ -1,21 +1,35 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 import time
+import treq
 from klein import Klein
 from twisted.internet.defer import inlineCallbacks, returnValue
 from simnode import Simnode
+import argparse
+import json
+import logging
 
 app = Klein()
 node = None
-servicemap = None
+config = ''
+inventory = ''
 
 # This is a simple key-value store for the controller node
 @app.route('/kv/<node_id>/<key>', methods = ['GET', 'POST'])
 def kv(request, key):
     return ""
 
-@app.route('/controller/<params>', methods = ['POST'])
-def control(request, params):
-    return ""
+@app.route('/controller/<node_id>', methods = ['POST'])
+def control(request, node_id):
+    servicemap = node.servicemap
+    for route in servicemap:
+        id = route['id']
+        hops = route['next_hops']:
+        for hop in hops:
+            url = "http://" + hop['ip'] + ':' + hop['port'] + '/setup'
+            node_routes_json = json.dumps(route)
+            treq.post(url, data=node_routes_json)
+
+    return "OK"
 
 @app.route('/info', methods = ['GET'])
 def info(request):
@@ -32,19 +46,38 @@ def latency(request, latency):
     node.set_stat({'type': 'latency', 'latency': latency})
     return "OK"
 
+@app.route('/update')
+def update(request, servicemap):
+    pass
+
 @app.route('/echo')
 def echo(request):
-    # Create routes
-    node.create_routes(servicemap)
+    return node.node_id + "ECHO"
 
-    # Set response code
-    request.setResponseCode(node.get_status_code)
+@app.route('/setup', methods = ['GET', 'POST'])
+def setup(request):
+    routes = None
+    if request.method == 'POST':
+        content = request.content.read()
+        routes = json.loads(content)
 
-    # Latency
+        print "ROUTES ARE: ", routes
+
+        node.create_routes(routes)
+        return "OK"
+    else:
+        print "MUST POST"
+
+
+# Replace this with a catch-all parameter so we can request any URI
+@app.route('/init', methods = ['GET', 'POST'])
+def init(request):
+    request.setResponseCode(node.get_status_code())
+
+    # Set Latency
     if node.infotable['latency'] > 0:
         time.sleep(node.infotable['latency'])
 
-    # Make requests to other nodes based on routes
     node.make_requests()
 
     # Check for text or file payload
@@ -53,15 +86,20 @@ def echo(request):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-n', '--nodetype', nargs='?', help='Specify the type of node')
-    parser.add_argument('-p', '--port', nargs='?', help='Specify the port the node will run on')
-    parser.add_argument('-m', '--servicemap', nargs='?', help='Location of servicemap configuration')
-    parser.add_argument('-l', '--servicemap_node', help='An <ip:port> string. An HTTP kv-store with the servicemap configuration exposed, typically the controller node.')
+    parser.add_argument('-n', '--nodetype', nargs='?', help="Specify the type of node")
+    parser.add_argument('-p', '--port', nargs='?', help="Specify the port the node will listen on")
+    parser.add_argument('-l', '--servicemap_node', default='localhost:8080', help="An <ip:port> string. An HTTP kv-store with the servicemap configuration, typically the controller node.")
+
+    parser.add_argument('-c', '--config', default='', help="The config file. Only for the controller node")
+    parser.add_argument('-i', '--inventory', default='', help="The inventory file")
+
+    args = parser.parse_args()
 
     port = int(args.port)
-    node = Simnode(args.nodetype)
-    servicemap = args.servicemap
+    config = args.config
+    inventory = args.inventory
 
+    node = Simnode(args.nodetype, config, inventory)
     app.run('localhost', port)
 
 '''

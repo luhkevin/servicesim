@@ -1,29 +1,24 @@
 import os
+import json
 
-def get_tokens(servicemap, split_func):
-    token_map = dict()
-    with open(servicemap, 'r') as smap:
-        for line in smap:
-            tok1, tok2 = split_func(line)
-            if tok1 not in token_map:
-                token_map[tok1] = list()
-            token_map[tok1].append(tok2)
-    return token_map
-
-def parse_smap_nodes(servicemap):
+def parse_smap_nodes(smap):
     pass
 
-def parse_smap_links(servicemap):
+def parse_smap_links(smap):
     pass
 
-def parse_smap_lbs(servicemap):
+def parse_smap_clients(smap):
     pass
 
-def parse_smap_clients(servicemap):
-    pass
+# Transforms "servicesim.json" and the inventory file into "smap" -- servicemap.json
+def route_parser(servicesim_config, inventory):
+    smap, inv = dict(), dict()
+    with open(inventory, 'r') as inventory_file:
+        print "PARSE INV FILE"
+    with open(servicesim_json, 'r') as smap_file:
+        smap_json = json.loads(smap_file)
 
-# servicemap can be a file or an HTTP endpoint
-# TODO: use urlparse to check if is url
-def route_parser(servicemap):
-    if os.path.exists(servicemap):
-        pass
+    # Do some json tranformations
+    print "JSON: ", smap
+    return smap
+
