@@ -20,7 +20,7 @@ class Simnode():
             self.default_port = default_port
 
             # This is for the controller node. Generates routes from servicemap config and inventory
-            self.servicemap = route_parser(config, inventory, default_port)
+            self.servicemap, self.inv_table, self.client_node_ids = route_parser(config, inventory, default_port)
 
     def set_stat(self, stat):
         if stat['type'] == 'status_code':
@@ -42,11 +42,12 @@ class Simnode():
     def make_requests(self):
         print "ROUTES ARE: ", self.routes
         for hop in self.routes:
-            for uri in hop['uris']:
-                url = 'http://' + hop['addr'] + ':' + hop['port'] + uri
-                print "URL IS: ", url
-                df = treq.get(url)
-                #df.addCallback()
+            for dest in hop['dests']:
+                for uri in hop['uris']:
+                    url = 'http://' + dest + uri
+                    print "URL IS: ", url
+                    df = treq.get(url)
+                    #df.addCallback()
 
     """
     node_servicemap is a dict that represents the routing table for this node

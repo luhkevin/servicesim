@@ -14,10 +14,20 @@ node = None
 config = ''
 inventory = ''
 
-# This is a simple key-value store for the controller node
-@app.route('/kv/<node_id>/<key>', methods = ['GET', 'POST'])
-def kv(request, key):
-    return ""
+# CONTROLLER NODE
+@app.route('/start/<client_node_id>')
+def start(request, client_node_id):
+    client_node_ids = node.client_node_ids
+    inv_table = node.inv_table
+    print "IN /start. clients are: ", client_node_ids
+    pprint(client_node_ids)
+    for id in client_node_ids:
+        if client_node_id == id or client_node_id == 'all':
+            client_nodes = inv_table[id]
+            for client in client_nodes:
+                url = 'http://' + client + '/process'
+                treq.get(url)
+
 
 @app.route('/controller/<node_id>', methods = ['POST'])
 def control(request, node_id):
@@ -38,6 +48,8 @@ def control(request, node_id):
 
     return "OK"
 
+
+# OTHER NODES
 @app.route('/info', methods = ['GET'])
 def info(request):
     return node.print_infotable
@@ -77,8 +89,9 @@ def setup(request):
 
 
 # Replace this with a catch-all parameter so we can request any URI
-@app.route('/init', methods = ['GET', 'POST'])
-def init(request):
+# This is for the simserver proper nodes
+@app.route('/process', methods = ['GET', 'POST'])
+def process_endpoint(request):
     request.setResponseCode(node.get_status_code())
 
     # Set Latency

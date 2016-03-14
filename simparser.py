@@ -15,6 +15,7 @@ def route_parser(servicesim_config, inventory, default_port):
     default_port = str(default_port)
     servicemap = list()
     inv_table = dict()
+    client_nodes = list()
     with open(inventory, 'r') as inv_file:
         # Skip the "[servers]" heading
         inv_file.readline()
@@ -26,12 +27,13 @@ def route_parser(servicesim_config, inventory, default_port):
             node_id = label.split('=')[1].split(':')[1]
             if node_id not in inv_table:
                 inv_table[node_id] = list()
-            inv_table[node_id].append((node_addr,node_port))
+            inv_table[node_id].append(str(node_addr) + ':' + str(node_port))
 
         pprint(inv_table)
 
     with open(servicesim_config, 'r') as sim_config:
         sim_config = json.load(sim_config)
+        client_node_ids = sim_config['clients']
         nodes = sim_config['nodes']
         links = sim_config['links']
 
@@ -45,7 +47,7 @@ def route_parser(servicesim_config, inventory, default_port):
         for node_id, ipaddrs in inv_table.items():
             node_servicemap = dict()
             node_servicemap['id'] = node_id
-            node_servicemap['srcs'] = [str(tup[0]) + ':' + str(tup[1]) for tup in inv_table[node_id]]
+            node_servicemap['srcs'] = inv_table[node_id]
             node_servicemap['next_hops'] = list()
             for link in links:
                 print "node_id is: ", node_id, "LINK IS: ", link
@@ -53,11 +55,11 @@ def route_parser(servicesim_config, inventory, default_port):
                 if node_id == link['src']:
                     dest_node_id = link['dest']
                     hop['id'] = link['dest']
-                    hop['dests'] = [str(tup[0]) + ':' + str(tup[1]) for tup in inv_table[dest_node_id]]
+                    hop['dests'] = inv_table[dest_node_id]
                     hop['uris'] = node_table[dest_node_id]['uris']
                     node_servicemap['next_hops'].append(hop)
                     servicemap.append(node_servicemap)
 
     # Do some json tranformations
     pprint(servicemap)
-    return servicemap
+    return servicemap, inv_table, client_node_ids
