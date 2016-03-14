@@ -71,7 +71,7 @@ def update(request, servicemap):
 
 @app.route('/echo')
 def echo(request):
-    return node.node_id + "ECHO"
+    return "ECHO " + node.node_id + "\n"
 
 @app.route('/setup', methods = ['GET', 'POST'])
 def setup(request):
@@ -107,6 +107,7 @@ def process_endpoint(request):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--nodetype', nargs='?', help="Specify the type of node")
+    parser.add_argument('-a', '--address', default='localhost', help="Specify the address the node will run on")
     parser.add_argument('-p', '--port', nargs='?', help="Specify the port the node will listen on")
     parser.add_argument('-l', '--servicemap_node', default='localhost:8080', help="An <ip:port> string. An HTTP kv-store with the servicemap configuration, typically the controller node.")
 
@@ -116,6 +117,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    address = str(args.address)
     port = int(args.port)
     config = args.config
     inventory = args.inventory
@@ -123,7 +125,7 @@ if __name__ == '__main__':
 
     # Can we have two different constructors?
     node = Simnode(args.nodetype, config, inventory, default_port)
-    app.run('localhost', port)
+    app.run(address, port)
 
 '''
 routes:

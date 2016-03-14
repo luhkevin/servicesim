@@ -20,11 +20,15 @@ def route_parser(servicesim_config, inventory, default_port):
         # Skip the "[servers]" heading
         inv_file.readline()
         for line in inv_file:
+            tags = dict()
             line = line.strip()
             line_toks = line.split(' ')
-            node_addr, port, label = line_toks[0], line_toks[1], line_toks[2]
-            node_port = port.split('=')[1]
-            node_id = label.split('=')[1].split(':')[1]
+            node_addr, tag_toks = line_toks[0], line_toks[1:]
+            for tag in tag_toks:
+                tag_pair = tag.split('=')
+                tags[tag_pair[0]] = tag_pair[1]
+            node_port = tags['port']
+            node_id = tags['label'].split(':')[1]
             if node_id not in inv_table:
                 inv_table[node_id] = list()
             inv_table[node_id].append(str(node_addr) + ':' + str(node_port))
