@@ -23,3 +23,9 @@ E|C
 
 * Also have a "controller" endpoint with a REST API exposed which we can use to control each node
 * E.g. GET /controller/A?latency=0.5&status=404_50 .... or Have a POST endpoint with JSON data
+
+
+### Doing this in JSON instead
+* There are two templates -- servicesim.json and servicemap.json
+* *servicesim.json* is the initial config file that's passed to the controller node
+  * The controller takes servicesim.json and constructs a list of routes, where each route contains the source node id and the ip/port/uris of 

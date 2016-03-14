@@ -22,12 +22,12 @@ def kv(request, key):
 def control(request, node_id):
     servicemap = node.servicemap
     for route in servicemap:
-        id = route['id']
-        hops = route['next_hops']:
-        for hop in hops:
-            url = "http://" + hop['ip'] + ':' + hop['port'] + '/setup'
-            node_routes_json = json.dumps(route)
-            treq.post(url, data=node_routes_json)
+        node_ips = route['ips']
+        node_port = route['port']
+        for node_ip in node_ips:
+          url = "http://" + node_ip + ':' + node_port + '/setup'
+          node_routes_json = json.dumps(route['next_hops'])
+          treq.post(url, data=node_routes_json)
 
     return "OK"
 
@@ -92,14 +92,17 @@ if __name__ == '__main__':
 
     parser.add_argument('-c', '--config', default='', help="The config file. Only for the controller node")
     parser.add_argument('-i', '--inventory', default='', help="The inventory file")
+    parser.add_argument('-d', '--default_port', default='8080', help="The default port for each non-controller servicesim node")
 
     args = parser.parse_args()
 
     port = int(args.port)
     config = args.config
     inventory = args.inventory
+    default_port = args.default_port
 
-    node = Simnode(args.nodetype, config, inventory)
+    # Can we have two different constructors?
+    node = Simnode(args.nodetype, config, inventory, default_port)
     app.run('localhost', port)
 
 '''

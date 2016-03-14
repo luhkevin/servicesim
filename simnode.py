@@ -8,7 +8,7 @@ import time
 # TODO: setup logging
 
 class Simnode():
-    def __init__(self, node_id, config, inventory):
+    def __init__(self, node_id, config, inventory, default_port):
         self.node_id = node_id
         self.status_code_freq = [200]
         self.routes = dict()
@@ -17,8 +17,10 @@ class Simnode():
         if self.node_id == 'control':
             self.config = config
             self.inventory = inventory
-            self.parse_servicesim_config(config, inventory)
-            self.servicemap = dict()
+            self.default_port = default_port
+
+            # This is for the controller node. Generates routes from servicemap config and inventory
+            self.servicemap = route_parser(config, inventory, default_port)
 
     def set_stat(self, stat):
         if stat['type'] == 'status_code':
@@ -39,7 +41,7 @@ class Simnode():
 
     def make_requests(self):
         print "ROUTES ARE: ", self.routes
-        for hop in self.routes['next_hops']:
+        for hop in self.routes:
             for uri in hop['uris']:
                 url = 'http://' + hop['addr'] + ':' + hop['port'] + uri
                 print "URL IS: ", url
@@ -47,13 +49,9 @@ class Simnode():
                 #df.addCallback()
 
     """
-    servicemap is a dict that represents the routing table for this node
+    node_servicemap is a dict that represents the routing table for this node
     See 'servicemap.json' for an example
     """
     # TODO: Do some validity checking on this later
-    def create_routes(self, servicemap):
-        self.routes = servicemap
-
-    # This is for the controller node. Generates routes from servicemap config and inventory
-    def parse_servicesim_config(self, servicesim_config, inventory):
-        self.servicemap = route_parser(servicesim_config, inventory)
+    def create_routes(self, node_servicemap):
+        self.routes = node_servicemap
