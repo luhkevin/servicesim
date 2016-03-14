@@ -1,0 +1,3 @@
+[servers]
+127.0.0.1 port=8000 label=node:alpha
+127.0.0.1 port=8001 label=node:beta

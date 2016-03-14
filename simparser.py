@@ -2,12 +2,14 @@ import os
 import json
 from pprint import pprint
 
+def tuple_to_str(tuple, delimiter):
+    return str(tuple[0]) + ':' + str(tuple[1])
 
 # Transforms "servicesim.json" and the inventory file into "smap" -- servicemap.json
 def route_parser(servicesim_config, inventory, default_port):
     """
     The <inventory> is an ansible inventory file
-    The inv_table is a hashmap (dict) of <node_id, [{ip_addr : port}, ...]>
+    The inv_table is a hashmap (dict) of <node_id, [(ip_addr,port), ...]>
     Port will probably just be hardcoded/defaulted to 8080 or something
     """
     default_port = str(default_port)
@@ -24,7 +26,7 @@ def route_parser(servicesim_config, inventory, default_port):
             node_id = label.split('=')[1].split(':')[1]
             if node_id not in inv_table:
                 inv_table[node_id] = list()
-            inv_table[node_id].append({node_addr : node_port})
+            inv_table[node_id].append((node_addr,node_port))
 
         pprint(inv_table)
 
@@ -43,7 +45,7 @@ def route_parser(servicesim_config, inventory, default_port):
         for node_id, ipaddrs in inv_table.items():
             node_servicemap = dict()
             node_servicemap['id'] = node_id
-            node_servicemap['srcs'] = [inv_table[node_id]]
+            node_servicemap['srcs'] = [str(tup[0]) + ':' + str(tup[1]) for tup in inv_table[node_id]]
             node_servicemap['next_hops'] = list()
             for link in links:
                 print "node_id is: ", node_id, "LINK IS: ", link
@@ -51,7 +53,7 @@ def route_parser(servicesim_config, inventory, default_port):
                 if node_id == link['src']:
                     dest_node_id = link['dest']
                     hop['id'] = link['dest']
-                    hop['dests'] = inv_table[dest_node_id]
+                    hop['dests'] = [str(tup[0]) + ':' + str(tup[1]) for tup in inv_table[dest_node_id]]
                     hop['uris'] = node_table[dest_node_id]['uris']
                     node_servicemap['next_hops'].append(hop)
                     servicemap.append(node_servicemap)

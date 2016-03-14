@@ -1,0 +1,29 @@
+{
+    "nodes": [
+        {
+            "id": "alpha",
+            "latency": 0.5,
+            "status": 404,
+            "uris": ["/echo", "/moreecho"]
+        },
+        {
+            "id": "beta",
+            "latency": 0.25,
+            "status": 200,
+            "uris": ["/betaecho", "/morebeta"]
+        }
+    ],
+    "links": [
+        {
+            "src": "alpha",
+            "dest": "beta",
+            "lb": false
+        },
+        {
+            "src": "beta",
+            "dest": "alpha",
+            "lb": false
+        }
+    ],
+    "clients": ["alpha", "beta"]
+}

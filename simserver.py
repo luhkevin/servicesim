@@ -7,6 +7,7 @@ from simnode import Simnode
 import argparse
 import json
 import logging
+from pprint import pprint
 
 app = Klein()
 node = None
@@ -21,13 +22,19 @@ def kv(request, key):
 @app.route('/controller/<node_id>', methods = ['POST'])
 def control(request, node_id):
     servicemap = node.servicemap
+    print "IN /controller. servicemap is: "
+    pprint(servicemap)
     for route in servicemap:
-        node_ips = route['ips']
-        node_port = route['port']
-        for node_ip in node_ips:
-          url = "http://" + node_ip + ':' + node_port + '/setup'
-          node_routes_json = json.dumps(route['next_hops'])
-          treq.post(url, data=node_routes_json)
+        if node_id == route['id'] or node_id == 'all':
+            srcs = route['srcs']
+            for src in srcs:
+                print "src: ", src
+                #src = ip:port
+                url = "http://" + src + '/setup'
+                node_routes_json = json.dumps(route['next_hops'])
+                treq.post(url, data=node_routes_json)
+        else:
+            print "Skipping non-matched URL"
 
     return "OK"
 
