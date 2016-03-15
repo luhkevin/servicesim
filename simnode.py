@@ -14,7 +14,7 @@ class Simnode():
         self.routes = dict()
         self.infotable = {'node_id' : node_id, 'latency': 0.25}
 
-        if self.node_id == 'control':
+        if self.node_id == 'controller':
             self.config = config
             self.inventory = inventory
             self.default_port = default_port
