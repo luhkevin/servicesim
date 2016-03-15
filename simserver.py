@@ -24,11 +24,11 @@ def start(request, client_node_id):
     inv_table = node.inv_table
     print "IN /start. clients are: ", client_node_ids
     pprint(client_node_ids)
-    for id in client_node_ids:
-        if client_node_id == id or client_node_id == 'all':
-            client_nodes = inv_table[id]
+    for cid in client_node_ids:
+        if client_node_id == cid or client_node_id == 'all':
+            client_nodes = inv_table[cid]
             for client in client_nodes:
-                url = 'http://' + client + '/' + client_node_id + '/loop'
+                url = 'http://' + client + '/' + cid + '/loop'
                 d = treq.get(url)
                 d.addCallback(ack_response)
 
