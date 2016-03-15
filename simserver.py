@@ -14,6 +14,9 @@ node = None
 config = ''
 inventory = ''
 
+def ack_response(resp):
+    print "Controller received response"
+
 # CONTROLLER NODE
 @app.route('/start/<client_node_id>')
 def start(request, client_node_id):
@@ -25,9 +28,9 @@ def start(request, client_node_id):
         if client_node_id == id or client_node_id == 'all':
             client_nodes = inv_table[id]
             for client in client_nodes:
-                url = 'http://' + client + '/process'
-                treq.get(url)
-
+                url = 'http://' + client + '/' + client_node_id + '/loop'
+                d = treq.get(url)
+                d.addCallback(ack_response)
 
 @app.route('/controller/<node_id>', methods = ['POST'])
 def control(request, node_id):
@@ -87,11 +90,10 @@ def setup(request):
     else:
         print "MUST POST"
 
-
 # Replace this with a catch-all parameter so we can request any URI
-# This is for the simserver proper nodes
-@app.route('/process', methods = ['GET', 'POST'])
-def process_endpoint(request):
+# "loop" tells a node to make requests to all of the nodes in its routing table
+@app.route('/<node_id>/loop', methods = ['GET', 'POST'])
+def loop_endpoint(request, node_id):
     request.setResponseCode(node.get_status_code())
 
     # Set Latency

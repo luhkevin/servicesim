@@ -4,13 +4,13 @@
             "id": "alpha",
             "latency": 0.5,
             "status": 404,
-            "uris": ["/echo", "/process"]
+            "uris": ["/echo", "/beta/loop"]
         },
         {
             "id": "beta",
             "latency": 0.25,
             "status": 200,
-            "uris": ["/echo", "/process"]
+            "uris": ["/echo", "/alpha/loop"]
         }
     ],
     "links": [

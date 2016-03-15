@@ -39,6 +39,9 @@ class Simnode():
     def get_status_code(self):
         return random.choice(self.status_code_freq)
 
+    def ack_response(self, resp):
+        print str(self.node_id) + " received response"
+
     def make_requests(self):
         print "ROUTES ARE: ", self.routes
         for hop in self.routes:
@@ -47,7 +50,7 @@ class Simnode():
                     url = 'http://' + dest + uri
                     print "URL IS: ", url
                     df = treq.get(url)
-                    #df.addCallback()
+                    df.addCallback(self.ack_response)
 
     """
     node_servicemap is a dict that represents the routing table for this node
