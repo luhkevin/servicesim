@@ -45,6 +45,7 @@ def route_parser(servicesim_config, inventory, default_port):
         for node in nodes:
             node_id = node['id']
             if '-' in node_id:
+                print "NODE IS IS: ", node_id
                 index = int(node_id.split('-')[2])
                 if node_id not in inv_table:
                     inv_table[node_id] = list()
@@ -65,7 +66,6 @@ def route_parser(servicesim_config, inventory, default_port):
             node_servicemap['srcs'] = inv_table[node_id]
             node_servicemap['next_hops'] = list()
             for link in links:
-                print "node_id is: ", node_id, "LINK IS: ", link
                 hop = dict()
                 if node_id == link['src']:
                     dest_node_id = link['dest']
@@ -79,3 +79,5 @@ def route_parser(servicesim_config, inventory, default_port):
     pprint(servicemap)
     return servicemap, inv_table, client_node_ids
 
+if __name__ == '__main__':
+    route_parser('/tmp/servicesim-config-docker.json', '/tmp/servicesim-inv', '8000')

@@ -18,6 +18,14 @@ def ack_response(resp):
     print "Controller received response"
 
 # CONTROLLER NODE
+@app.route('/setstatus/<node_id>/<status>')
+def setstatus(request, node_id, status):
+    dests = node.inv_table[node_id]
+        for dest in dests:
+            url = 'http://' + dest + '/' + status + '/' + '100'
+            d = treq.post(url)
+            d.addCallback(ack_response)
+
 @app.route('/start/<client_node_id>')
 def start(request, client_node_id):
     client_node_ids = node.client_node_ids
@@ -45,12 +53,12 @@ def control(request, node_id):
                 #src = ip:port
                 url = "http://" + src + '/setup'
                 node_routes_json = json.dumps(route['next_hops'])
-                treq.post(url, data=node_routes_json)
+                d = treq.post(url, data=node_routes_json)
+                d.addCallback(ack_response)
         else:
             print "Skipping non-matched URL"
 
     return "OK"
-
 
 # OTHER NODES
 @app.route('/info', methods = ['GET'])
@@ -61,7 +69,7 @@ def info(request):
 @app.route('/status/<status_code>/<percentage>', methods = ['GET', 'POST'])
 def status(request, status_code, percentage):
     node.set_stat({'type': 'status_code', 'status_code': int(status_code), 'percentage': int(percentage)})
-    return "OK"
+    return "STATUS CODE " + str(status_code) + " set to " + str(percentage) + " percent"
 
 @app.route('/latency/<latency>', methods = ['GET', 'POST'])
 def latency(request, latency):
