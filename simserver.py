@@ -21,10 +21,10 @@ def ack_response(resp):
 @app.route('/setstatus/<node_id>/<status>')
 def setstatus(request, node_id, status):
     dests = node.inv_table[node_id]
-        for dest in dests:
-            url = 'http://' + dest + '/' + status + '/' + '100'
-            d = treq.post(url)
-            d.addCallback(ack_response)
+    for dest in dests:
+        url = 'http://' + dest + '/' + status + '/' + '100'
+        d = treq.post(url)
+        d.addCallback(ack_response)
 
 @app.route('/start/<client_node_id>')
 def start(request, client_node_id):
