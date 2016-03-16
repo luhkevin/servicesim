@@ -12,7 +12,7 @@ class Simnode():
         self.node_id = node_id
         self.status_code_freq = [200]
         self.routes = dict()
-        self.infotable = {'node_id' : node_id, 'latency': 0.05}
+        self.infotable = {'node_id' : node_id, 'latency': 0.1}
 
         if self.node_id == 'controller':
             self.config = config

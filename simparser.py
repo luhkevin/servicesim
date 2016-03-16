@@ -9,7 +9,7 @@ def tuple_to_str(tuple, delimiter):
 def route_parser(servicesim_config, inventory, default_port):
     """
     The <inventory> is an ansible inventory file
-    The inv_table is a hashmap (dict) of <node_id, [(ip_addr,port), ...]>
+    The inv_table is a hashmap (dict) of <node_id, ["ip_addr:port", ...]>
     Port will probably just be hardcoded/defaulted to 8080 or something
     """
     default_port = str(default_port)
@@ -33,13 +33,24 @@ def route_parser(servicesim_config, inventory, default_port):
                 inv_table[node_id] = list()
             inv_table[node_id].append(str(node_addr) + ':' + str(node_port))
 
-        pprint(inv_table)
-
     with open(servicesim_config, 'r') as sim_config:
         sim_config = json.load(sim_config)
         client_node_ids = sim_config['clients']
         nodes = sim_config['nodes']
         links = sim_config['links']
+
+        # Update inv_table with containers
+        # Container addresses (e.g. hosts) are hardcoded to node_id.marathon.mesos (assume we use Mesos-DNS)
+        # Container ports are hardcoded to 31000 + n, where n is a number in the node id "node-c-n"
+        for node in nodes:
+            node_id = node['id']
+            if '-' in node_id:
+                index = int(node_id.split('-')[2])
+                if node_id not in inv_table:
+                    inv_table[node_id] = list()
+                inv_table[node_id].append(node_id + '.marathon.mesos' + ':' + str(31000 + index))
+
+        pprint(inv_table)
 
         # This is a hashmap of <node_id, node>, where the node is just an object in the 'nodes' array in servicesim.json
         node_table = dict()
@@ -67,3 +78,4 @@ def route_parser(servicesim_config, inventory, default_port):
     # Do some json tranformations
     pprint(servicemap)
     return servicemap, inv_table, client_node_ids
+
