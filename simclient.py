@@ -7,7 +7,7 @@ def run(address, port, latency):
     time.sleep(3)
 
     # Send a SETUP message to each node
-    controller_url = 'http://' + str(address) + ':' + str(port)
+    url = 'http://' + str(address) + ':' + str(port)
     requests.post(url + '/controller/all')
 
     # Sleep for the other nodes' to accept their configuration
