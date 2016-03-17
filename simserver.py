@@ -24,7 +24,7 @@ def setstat(request, stat_type, node_id, stat):
     for dest in dests:
         url = ''
         if stat_type == 'status':
-            url = 'http://' + dest + '/status/' + stat + '/100'
+            url = 'http://' + dest + '/status/' + stat
         elif stat_type == 'latency':
             url = 'http://' + dest + '/latency/' + stat
         d = treq.post(url)
