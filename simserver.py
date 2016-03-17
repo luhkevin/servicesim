@@ -91,8 +91,6 @@ def setup(request):
         content = request.content.read()
         routes = json.loads(content)
 
-        print "ROUTES ARE: ", routes
-
         node.create_routes(routes)
         return "OK"
     else:
@@ -102,7 +100,6 @@ def setup(request):
 # "loop" tells a node to make requests to all of the nodes in its routing table
 @app.route('/<node_id>', methods = ['GET', 'POST'])
 def loop_endpoint(request, node_id):
-    print "STATUS CODE IS: ", node.get_status_code()
     request.setResponseCode(node.get_status_code())
 
     # Set Latency

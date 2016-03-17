@@ -45,7 +45,7 @@ def route_parser(servicesim_config, inventory, default_port):
         for node in nodes:
             node_id = node['id']
             if '-' in node_id:
-                print "NODE IS IS: ", node_id
+                print "NODE IS: ", node_id
                 index = int(node_id.split('-')[2])
                 if node_id not in inv_table:
                     inv_table[node_id] = list()

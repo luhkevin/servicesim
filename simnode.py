@@ -40,12 +40,10 @@ class Simnode():
         print str(self.node_id) + " received response"
 
     def make_requests(self):
-        print "ROUTES ARE: ", self.routes
         for hop in self.routes:
             for dest in hop['dests']:
                 for uri in hop['uris']:
                     url = 'http://' + dest + uri
-                    print "URL IS: ", url
                     df = treq.get(url)
                     df.addCallback(self.ack_response)
 
@@ -56,3 +54,4 @@ class Simnode():
     # TODO: Do some validity checking on this later
     def create_routes(self, node_servicemap):
         self.routes = node_servicemap
+        print "ROUTES ARE: ", self.routes
