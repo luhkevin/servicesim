@@ -1,5 +1,6 @@
 import time
 import requests
+import argparse
 
 def run(address, port, latency):
     # First, sleep so the controller node has time to spin up
@@ -22,16 +23,11 @@ def run(address, port, latency):
         requests.post(url + '/start/all')
 
 
-if __name__=='__main__':
-    run()
-
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--address', default='localhost', help="Specify the address of the controller")
-    parser.add_argument('-p', '--port', , default='8080', help="Specify the port of the controller")
-    parser.add_argument('-l', '--latency', , default='0.1', help="Specify the latency of requests")
+    parser.add_argument('-p', '--port', default='8080', help="Specify the port of the controller")
+    parser.add_argument('-l', '--latency', default='0.1', help="Specify the latency of requests")
 
     args = parser.parse_args()
 
