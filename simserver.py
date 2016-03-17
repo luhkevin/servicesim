@@ -18,11 +18,15 @@ def ack_response(resp):
     print "Controller received response"
 
 # CONTROLLER NODE
-@app.route('/setstatus/<node_id>/<status>')
-def setstatus(request, node_id, status):
+@app.route('/setstat/<stat_type>/<node_id>/<stat>')
+def setstat(request, stat_type, node_id, stat):
     dests = node.inv_table[node_id]
     for dest in dests:
-        url = 'http://' + dest + '/' + status + '/' + '100'
+        url = ''
+        if stat_type == 'status':
+            url = 'http://' + dest + '/status/' + stat + '/100'
+        elif stat_type == 'latency':
+            url = 'http://' + dest + '/latency/' + stat
         d = treq.post(url)
         d.addCallback(ack_response)
 
@@ -66,23 +70,19 @@ def info(request):
     return node.print_infotable
 
 # By default, everything returns 200 OK
-@app.route('/status/<status_code>/<percentage>', methods = ['GET', 'POST'])
-def status(request, status_code, percentage):
-    node.set_stat({'type': 'status_code', 'status_code': int(status_code), 'percentage': int(percentage)})
-    return "STATUS CODE " + str(status_code) + " set to " + str(percentage) + " percent"
+@app.route('/status/<status_code>', methods = ['GET', 'POST'])
+def status(request, status_code):
+    node.set_stat({'type': 'status_code', 'status_code': int(status_code)})
+    return "STATUS CODE set to " + str(status_code)
 
 @app.route('/latency/<latency>', methods = ['GET', 'POST'])
 def latency(request, latency):
-    node.set_stat({'type': 'latency', 'latency': latency})
+    node.set_stat({'type': 'latency', 'latency': float(latency)})
     return "OK"
 
-@app.route('/update')
-def update(request, servicemap):
-    pass
-
-@app.route('/echo')
-def echo(request):
-    return "ECHO " + node.node_id + "\n"
+@app.route('/echo/<node_id>')
+def echo(request, node_id):
+    return "ECHO " + node_id + "\n"
 
 @app.route('/setup', methods = ['GET', 'POST'])
 def setup(request):
@@ -100,8 +100,9 @@ def setup(request):
 
 # Replace this with a catch-all parameter so we can request any URI
 # "loop" tells a node to make requests to all of the nodes in its routing table
-@app.route('/<node_id>/loop', methods = ['GET', 'POST'])
+@app.route('/<node_id>', methods = ['GET', 'POST'])
 def loop_endpoint(request, node_id):
+    print "STATUS CODE IS: ", node.get_status_code()
     request.setResponseCode(node.get_status_code())
 
     # Set Latency
@@ -119,7 +120,6 @@ if __name__ == '__main__':
     parser.add_argument('-n', '--nodetype', nargs='?', help="Specify the type of node")
     parser.add_argument('-a', '--address', default='localhost', help="Specify the address the node will run on")
     parser.add_argument('-p', '--port', nargs='?', help="Specify the port the node will listen on")
-    parser.add_argument('-l', '--servicemap_node', default='localhost:8080', help="An <ip:port> string. An HTTP kv-store with the servicemap configuration, typically the controller node.")
 
     parser.add_argument('-c', '--config', default='', help="The config file. Only for the controller node")
     parser.add_argument('-i', '--inventory', default='', help="The inventory file")

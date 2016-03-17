@@ -10,9 +10,10 @@ import time
 class Simnode():
     def __init__(self, node_id, config, inventory, default_port):
         self.node_id = node_id
-        self.status_code_freq = [200]
         self.routes = dict()
-        self.infotable = {'node_id' : node_id, 'latency': 0.1}
+        self.status_code = 200
+        self.latency = 0.1
+        self.infotable = {'node_id' : node_id,  'status_code': self.status_code, 'latency': self.latency}
 
         if self.node_id == 'controller':
             self.config = config
@@ -21,23 +22,19 @@ class Simnode():
 
             # This is for the controller node. Generates routes from servicemap config and inventory
             self.servicemap, self.inv_table, self.client_node_ids = route_parser(config, inventory, default_port)
+            self.infotable['servicemap'] = self.servicemap
 
     def set_stat(self, stat):
-        if stat['type'] == 'status_code':
-            status_code = stat['status_code']
-            percentage = stat['percentage']
-            status_code_freq = [200] * (100 - percentage)
-            fill_code_freq = [status_code] * percentage
-            status_code_freq.extend(fill_code_freq)
-            self.infotable['status_code'] = (status_code, percentage)
-        elif stat['type'] == 'latency':
-            self.infotable['latency'] = stat['latency']
+        stat_type = stat['type']
+        self.infotable[stat_type] = stat[stat_type]
+        if stat_type == 'status_code':
+            self.status_code = stat[stat_type]
 
     def print_infotable(self):
         return json.dumps(self.infotable)
 
     def get_status_code(self):
-        return random.choice(self.status_code_freq)
+        return self.status_code
 
     def ack_response(self, resp):
         print str(self.node_id) + " received response"
