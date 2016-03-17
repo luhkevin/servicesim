@@ -40,7 +40,7 @@ def start(request, client_node_id):
         if client_node_id == cid or client_node_id == 'all':
             client_nodes = inv_table[cid]
             for client in client_nodes:
-                url = 'http://' + client + '/' + cid + '/loop'
+                url = 'http://' + client + '/' + cid
                 d = treq.get(url)
                 d.addCallback(ack_response)
 
