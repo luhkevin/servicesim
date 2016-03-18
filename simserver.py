@@ -34,15 +34,17 @@ def setstat(request, stat_type, node_id, stat):
 def start(request, client_node_id):
     client_node_ids = node.client_node_ids
     inv_table = node.inv_table
+    node_table = node.node_table
     print "IN /start. clients are: ", client_node_ids
     pprint(client_node_ids)
     for cid in client_node_ids:
         if client_node_id == cid or client_node_id == 'all':
             client_nodes = inv_table[cid]
             for client in client_nodes:
-                url = 'http://' + client + '/' + cid
-                d = treq.get(url, persistent=False)
-                d.addCallback(ack_response)
+                for client_uri in node_table[cid]['uris']:
+                    url = 'http://' + client + client_uri
+                    d = treq.get(url, persistent=False)
+                    d.addCallback(ack_response)
 
 @app.route('/controller/<node_id>', methods = ['POST'])
 def control(request, node_id):

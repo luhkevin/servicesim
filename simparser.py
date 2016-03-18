@@ -77,7 +77,7 @@ def route_parser(servicesim_config, inventory, default_port):
 
     # Do some json tranformations
     pprint(servicemap)
-    return servicemap, inv_table, client_node_ids
+    return servicemap, inv_table, client_node_ids, node_table
 
 if __name__ == '__main__':
     route_parser('/tmp/servicesim-config-docker.json', '/tmp/servicesim-inv', '8000')

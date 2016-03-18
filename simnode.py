@@ -21,7 +21,8 @@ class Simnode():
             self.default_port = default_port
 
             # This is for the controller node. Generates routes from servicemap config and inventory
-            self.servicemap, self.inv_table, self.client_node_ids = route_parser(config, inventory, default_port)
+            self.servicemap, self.inv_table, self.client_node_ids, self.node_table = route_parser(config, inventory, default_port)
+            self.node_uris = dict()
             self.infotable['servicemap'] = self.servicemap
 
     def set_stat(self, stat):
