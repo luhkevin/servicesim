@@ -41,7 +41,7 @@ def start(request, client_node_id):
             client_nodes = inv_table[cid]
             for client in client_nodes:
                 url = 'http://' + client + '/' + cid
-                d = treq.get(url)
+                d = treq.get(url, persistent=False)
                 d.addCallback(ack_response)
 
 @app.route('/controller/<node_id>', methods = ['POST'])
