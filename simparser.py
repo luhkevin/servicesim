@@ -22,7 +22,7 @@ def route_parser(servicesim_config, inventory, default_port):
         for line in inv_file:
             tags = dict()
             line = line.strip()
-            line_toks = line.split(' ')
+            line_toks = line.split()
             node_addr, tag_toks = line_toks[0], line_toks[1:]
             for tag in tag_toks:
                 tag_pair = tag.split('=')
