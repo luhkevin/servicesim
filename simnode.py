@@ -44,7 +44,7 @@ class Simnode():
             for dest in hop['dests']:
                 for uri in hop['uris']:
                     url = 'http://' + dest + uri
-                    df = treq.get(url)
+                    df = treq.get(url, persistent=False)
                     df.addCallback(self.ack_response)
 
     """
