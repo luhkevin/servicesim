@@ -14,10 +14,10 @@ def run(address, port, latency):
     time.sleep(3)
 
     # Setup some stats
-    requests.post(url + '/setstat/status/gamma/404')
-    requests.post(url + '/setstat/status/kappa/404')
-    requests.post(url + '/setstat/status/iota/500')
-    requests.post(url + '/setstat/latency/iota/2.0')
+    #requests.post(url + '/setstat/status/gamma/404')
+    #requests.post(url + '/setstat/status/kappa/404')
+    #requests.post(url + '/setstat/status/iota/500')
+    #requests.post(url + '/setstat/latency/iota/2.0')
 
     # Start the client
     while True:

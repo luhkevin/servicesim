@@ -31,7 +31,7 @@ class Simnode():
             self.status_code = stat[stat_type]
 
     def print_infotable(self):
-        return json.dumps(self.infotable)
+        return str(self.infotable)
 
     def get_status_code(self):
         return self.status_code
