@@ -31,7 +31,7 @@ def route_parser(servicesim_config, inventory, default_port):
             node_id = tags['label'].split(':')[1]
             if node_id not in inv_table:
                 inv_table[node_id] = list()
-            inv_table[node_id].append(str(node_addr) + ':' + str(node_port))
+            inv_table[node_id].append(str(tags['private_ip']) + ':' + str(node_port))
 
     with open(servicesim_config, 'r') as sim_config:
         sim_config = json.load(sim_config)
