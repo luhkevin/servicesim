@@ -29,7 +29,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--address', default='localhost', help="Specify the address of the controller")
     parser.add_argument('-p', '--port', default='8080', help="Specify the port of the controller")
-    parser.add_argument('-l', '--latency', default='0.1', help="Specify the latency of requests")
+    parser.add_argument('-l', '--latency', default='1.0', help="Specify the latency of requests")
 
     args = parser.parse_args()
 
