@@ -24,6 +24,7 @@ def route_parser(servicesim_config, inventory, default_port):
             line = line.strip()
             line_toks = line.split()
             node_addr, tag_toks = line_toks[0], line_toks[1:]
+            print "TAG TOKS: ", str(tag_toks)
             for tag in tag_toks:
                 tag_pair = tag.split('=')
                 tags[tag_pair[0]] = tag_pair[1]
