@@ -7,14 +7,14 @@
                 "id": "DEST_NODE_ID",
                 "dests": ["DEST_NODE_IP:DEST_NODE_PORT"],
                 "port": "PORT",
-                "uris": ["URI_1", "URI_2", "..."]
+                "uris": ["URI_1", "URI_2", "..."],
                 "stats": "In the future, we'll put stats local to the ip address here"
             },
             {
                 "id": "DEST_NODE_ID",
                 "dests": "[\"DEST_NODE_IP:DEST_NODE_PORT\"}]",
                 "port": "PORT",
-                "uris": ["URI_1", "URI_2", "..."]
+                "uris": ["URI_1", "URI_2", "..."],
                 "stats": "In the future, we'll put stats local to the ip address here"
             }
         ],

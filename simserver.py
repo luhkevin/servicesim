@@ -104,11 +104,11 @@ def setup(request):
 def loop_endpoint(request, node_id):
     request.setResponseCode(node.get_status_code())
 
+    node.make_requests()
+
     # Set Latency
     if node.infotable['latency'] > 0:
         time.sleep(node.infotable['latency'])
-
-    node.make_requests()
 
     # Check for text or file payload
     # Add any methods as a callback

@@ -2,28 +2,34 @@
     "nodes": [
         {
             "id": "alpha",
-            "latency": 0.5,
-            "status": 404,
-            "uris": ["/echo", "/beta/loop"]
+            "uris": ["/alpha"]
         },
         {
-            "id": "beta",
-            "latency": 0.25,
-            "status": 200,
-            "uris": ["/echo", "/alpha/loop"]
+            "id": "gamma",
+            "uris": ["/gamma"]
+        },
+        {
+            "id": "kappa",
+            "uris": ["/kappa"]
+        },
+        {
+            "id": "iota",
+            "uris": ["/iota"]
         }
     ],
     "links": [
         {
             "src": "alpha",
-            "dest": "beta",
-            "lb": false
+            "dest": "gamma"
         },
         {
-            "src": "beta",
-            "dest": "alpha",
-            "lb": false
+            "src": "gamma",
+            "dest": "kappa"
+        },
+        {
+            "src": "gamma",
+            "dest": "iota"
         }
     ],
-    "clients": ["alpha", "beta"]
+    "clients": ["alpha"] 
 }

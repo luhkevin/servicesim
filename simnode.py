@@ -4,6 +4,7 @@ import logging
 from simparser import route_parser
 import random
 import time
+from pool import UA_headers
 
 # TODO: setup logging
 
@@ -41,11 +42,13 @@ class Simnode():
         print str(self.node_id) + " received response"
 
     def make_requests(self):
+        ua_header = random.choice(UA_headers)
+        headers = { ua_header[0]: ua_header[1] }
         for hop in self.routes:
             for dest in hop['dests']:
                 for uri in hop['uris']:
                     url = 'http://' + dest + uri
-                    df = treq.get(url, persistent=False)
+                    df = treq.get(url, headers=headers, persistent=False)
                     df.addCallback(self.ack_response)
 
     """
