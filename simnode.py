@@ -12,9 +12,9 @@ class Simnode():
     def __init__(self, node_id, config, inventory, default_port):
         self.node_id = node_id
         self.routes = dict()
-        self.status_code = 200
+        self.status = 200
         self.latency = 0
-        self.infotable = {'node_id' : node_id,  'status_code': self.status_code, 'latency': self.latency}
+        self.infotable = {'node_id' : node_id,  'status': self.status, 'latency': self.latency}
 
         if self.node_id == 'controller':
             self.config = config
@@ -29,14 +29,8 @@ class Simnode():
     def set_stat(self, stat):
         stat_type = stat['type']
         self.infotable[stat_type] = stat[stat_type]
-        if stat_type == 'status_code':
-            self.status_code = stat[stat_type]
-
-    def print_infotable(self):
-        return str(self.infotable)
-
-    def get_status_code(self):
-        return self.status_code
+        if stat_type == 'status':
+            self.status = stat[stat_type]
 
     def ack_response(self, resp):
         print str(self.node_id) + " received response"

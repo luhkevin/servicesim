@@ -16,12 +16,10 @@ def route_parser(servicesim_config, inventory, default_port):
         **servicemap** -- A list of each node's servicemaps.
         A node servicemap is a dict that consists of the mappings:
             <'id', node_id>
-            <'srcs', node_addresses>
             <'next_hops', list of next hops>
 
         **inv_table** -- A dict with the mapping:
             <node_id, node_addresses>
-        This is used to construct the 'srcs' entry of the servicemap structure.
 
         **client_node_ids** -- This is a list of all the client node ids
 
@@ -57,13 +55,23 @@ def route_parser(servicesim_config, inventory, default_port):
         nodes = sim_config['nodes']
         links = sim_config['links']
 
-        # Update inv_table with containers
+        # Update node data from servicesim.json
         # Container addresses (e.g. hosts) are hardcoded to node_id.marathon.mesos (assume we use Mesos-DNS)
         # Container ports are hardcoded to 31000 + n, where n is a number in the node id "node-c-n"
+        # Update other attributes too -- latency and status code
         node_table = dict()
+        attributes = dict()
         for node in nodes:
+            node_attr = dict()
             node_id = node['id']
             node_table[node_id] = node
+
+            if 'latency' in node:
+                node_attr['latency'] = node['latency']
+            if 'status' in node:
+                node_attr['status'] = node ['status']
+            attributes[node_id] = node_attr
+
             if '-' in node_id:
                 index = int(node_id.split('-')[2])
                 if node_id not in inv_table:
@@ -71,13 +79,13 @@ def route_parser(servicesim_config, inventory, default_port):
                     # TODO: The 'marathon.mesos' domain should be configured through a config file
                 inv_table[node_id].append(node_id + '.marathon.mesos' + ':' + str(31000 + index))
 
-
+        # Create the servicemap structure
         # This is one element of the "servicemap" list
         for node_id, ipaddrs in inv_table.items():
-            node_servicemap = dict()
-            node_servicemap['id'] = node_id
-            node_servicemap['srcs'] = inv_table[node_id]
-            node_servicemap['next_hops'] = list()
+            route = dict()
+            route['id'] = node_id
+            route['attr'] = attributes[node_id]
+            route['next_hops'] = list()
             for link in links:
                 hop = dict()
                 if node_id == link['src']:
@@ -85,8 +93,8 @@ def route_parser(servicesim_config, inventory, default_port):
                     hop['id'] = link['dest']
                     hop['dests'] = inv_table[dest_node_id]
                     hop['uris'] = node_table[dest_node_id]['uris']
-                    node_servicemap['next_hops'].append(hop)
-                    servicemap.append(node_servicemap)
+                    route['next_hops'].append(hop)
+                    servicemap.append(route)
 
     pprint(inv_table)
     pprint(servicemap)

@@ -25,7 +25,7 @@ def setstat(request, stat_type, node_id, stat):
     for dest in dests:
         url = 'http://' + dest + '/' + str(stat_type) + '/' + stat
         d = treq.post(url)
-        d.addCallback(lambda x: print "Controller received response")
+        d.addCallback(node.ack_response)
 
 @app.route('/start/<client_node_id>')
 def start(request, client_node_id):
@@ -45,46 +45,57 @@ def start(request, client_node_id):
                 for client_uri in node_table[cid]['uris']:
                     url = 'http://' + client + client_uri
                     d = treq.get(url, persistent=False)
-                    d.addCallback(lambda x: print "Controller received response")
+                    d.addCallback(node.ack_response)
 
 @app.route('/setup_nodes/<node_id>', methods = ['POST'])
+def setup_nodes(request, node_id):
     """The 'setup_nodes' endpoint is called by the controller node and
     sets up the attributes for all the main nodes
     """
-def setup_nodes(request, node_id):
     servicemap = node.servicemap
     print "Servicemap is: "
     pprint(servicemap)
-    for route in servicemap:
-        if node_id == route['id'] or node_id == 'all':
-            srcs = route['srcs']
-            for src in srcs:
-                url = "http://" + src + '/setup'
+    if node_id == 'any' or node_id in node.inv_table.keys():
+        for route in servicemap:
+            node_id = route['id']
+            addresses = node.inv_table[node_id]
+            for addr in addresses:
+                # Do the initial setup
+                url = 'http://' + addr + '/setup'
                 node_routes_json = json.dumps(route['next_hops'])
                 d = treq.post(url, data=node_routes_json)
-                d.addCallback(ack_response)
-        else:
-            print "Skipping non-matched URL."
+                d.addCallback(node.ack_response)
+
+                # Set attributes
+                attributes = route['attr']
+                for stat_key, stat_val in attributes.iteritems():
+                    attr_url = 'http://' + addr + '/' + str(stat_key) + '/' + str(stat_val)
+                    d = treq.post(attr_url)
+                    d.addCallback(node.ack_response)
+    else:
+        print "Skipping non-matched URL."
     return "OK"
 
 # Main, non-controller node endpoints
 @app.route('/info', methods = ['GET'])
 def info(request):
-    return node.print_infotable
+    return str(node.infotable)
 
-@app.route('/status/<status_code>', methods = ['GET', 'POST'])
-def status(request, status_code):
-    node.set_stat({'type': 'status_code', 'status_code': int(status_code)})
-    return "Status code set to " + str(status_code)
+@app.route('/status/<status>', methods = ['GET', 'POST'])
+def status(request, status):
+    print "SETTING STATUS CODE: ", status
+    node.set_stat({'type': 'status', 'status': int(status)})
+    return "Status code set to " + str(status)
 
 @app.route('/latency/<latency>', methods = ['GET', 'POST'])
 def latency(request, latency):
+    print "SETTING LATENCY: ", latency
     node.set_stat({'type': 'latency', 'latency': float(latency)})
     return "OK"
 
-@app.route('/echo/<node_id>')
-def echo(request, node_id):
-    return "ECHO " + node_id + "\n"
+@app.route('/echo')
+def echo(request):
+    return node.node_id + '\n'
 
 @app.route('/setup', methods = ['GET', 'POST'])
 def setup(request):
@@ -107,11 +118,16 @@ def main_endpoint(request, node_id):
     """This is the main endpoint called by the main servicesim nodes to propagate all the requests.
     The route is a catch-all, and can accept any URI.
     """
-    request.setResponseCode(node.get_status_code())
+    request.setResponseCode(node.status)
     node.make_requests()
 
-    if node.infotable['latency'] > 0:
-        time.sleep(node.infotable['latency'])
+    latency = node.infotable['latency']
+    if latency > 0:
+        time.sleep(latency)
+
+    status = node.infotable['status']
+    if status != 200:
+        request.setResponseCode(status)
 
     return node.node_id
 
