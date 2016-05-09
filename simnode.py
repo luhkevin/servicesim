@@ -51,11 +51,9 @@ class Simnode():
                     df = treq.get(url, headers=headers, persistent=False)
                     df.addCallback(self.ack_response)
 
-    """
-    node_servicemap is a dict that represents the routing table for this node
-    See 'servicemap.json' for an example
-    """
-    # TODO: Do some validity checking on this later
-    def create_routes(self, node_servicemap):
-        self.routes = node_servicemap
-        print "ROUTES ARE: ", self.routes
+    # TODO: Implement and use this
+    def check_routes(self, node_servicemap):
+        """Checks the routes for validity
+        node_servicemap -- the routing table for this node. See 'servicemap.json' for an example.
+        """
+        pass

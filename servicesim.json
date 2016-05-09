@@ -3,8 +3,8 @@
         {
             "id": "alpha",
             "latency": 0.5,
-            "status": 404
-            "uris": ['/echo', '/moreecho']
+            "status": 404,
+            "uris": ["/echo", "/moreecho"]
         },
         {
             "id": "beta",
@@ -13,25 +13,25 @@
         },
         {
             "id": "alpha-C-0",
-            "description": "This is a node running as a container."
+            "description": "This is a node running as a container.",
             "latency": 0.1,
             "status": 500
         },
         {
             "id": "alpha-C-2",
-            "description": "This is a node running as a container."
+            "description": "This is a node running as a container.",
             "latency": 0.2,
             "status": 200
         },
         {
             "id": "alpha-C-3",
-            "description": "This is a node running as a container."
+            "description": "This is a node running as a container.",
             "latency": 0.5,
             "status": 404
         },
         {
             "id": "beta-C-3",
-            "description": "This is a node running as a container."
+            "description": "This is a node running as a container.",
             "latency": 0.15,
             "status": 200
         }
@@ -39,13 +39,14 @@
     "links": [
         {
             "src": "alpha",
-            "dest": "beta"
-            "lb": false
+            "description": "You can group src/dest links into one object.",
+            "dest": "beta,delta,alpha-C-0"
         },
         {
             "src": "alpha",
-            "dest": "delta",
-            "lb": true
+            "description": "The benefit to one-to-one src/dest objects is that you can be more specific about link attributes. Here, we are making the latency between alpha and beta 0.25. This will override the global attributes set on the nodes in the 'nodes' section.",
+            "dest": "beta",
+            "latency": "0.25"
         },
         {
             "src": "alpha-C-0",
@@ -53,15 +54,11 @@
         },
         {
             "src": "alpha-C-0",
-            "dest": "alpha-C-2",
-            "description": "withinHost determines whether or not the requests are routed through the public IP. If false, the request will go to node-id.marathon.mesos:port. Port is determined by adding the index of the container (the i in alpha-C-i) to 31000",
-            "withinHost": true
+            "dest": "alpha-C-2"
         },
         {
             "src": "alpha-C-0",
-            "dest": "alpha-C-3",
-            "description": "withinHost determines whether or not the requests are routed through the public IP",
-            "withinHost": false
+            "dest": "alpha-C-3"
         }
     ],
     "clients": ["alpha", "beta"]

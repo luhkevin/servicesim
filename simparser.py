@@ -11,7 +11,25 @@ def route_parser(servicesim_config, inventory, default_port):
     The <inventory> is an ansible inventory file
     The inv_table is a hashmap (dict) of <node_id, ["ip_addr:port", ...]>
     Port will probably just be hardcoded/defaulted to 8080 or something
+
+    Returns:
+        **servicemap** -- A list of each node's servicemaps.
+        A node servicemap is a dict that consists of the mappings:
+            <'id', node_id>
+            <'srcs', node_addresses>
+            <'next_hops', list of next hops>
+
+        **inv_table** -- A dict with the mapping:
+            <node_id, node_addresses>
+        This is used to construct the 'srcs' entry of the servicemap structure.
+
+        **client_node_ids** -- This is a list of all the client node ids
+
+        **node_table** -- a dict of the mapping:
+            <node_id, node>
+        The 'node' value is just an object in the 'nodes' array in the servicesim.json config.
     """
+
     default_port = str(default_port)
     servicemap = list()
     inv_table = dict()
@@ -42,22 +60,17 @@ def route_parser(servicesim_config, inventory, default_port):
         # Update inv_table with containers
         # Container addresses (e.g. hosts) are hardcoded to node_id.marathon.mesos (assume we use Mesos-DNS)
         # Container ports are hardcoded to 31000 + n, where n is a number in the node id "node-c-n"
-        for node in nodes:
-            node_id = node['id']
-            if '-' in node_id:
-                print "NODE IS: ", node_id
-                index = int(node_id.split('-')[2])
-                if node_id not in inv_table:
-                    inv_table[node_id] = list()
-                inv_table[node_id].append(node_id + '.marathon.mesos' + ':' + str(31000 + index))
-
-        pprint(inv_table)
-
-        # This is a hashmap of <node_id, node>, where the node is just an object in the 'nodes' array in servicesim.json
         node_table = dict()
         for node in nodes:
             node_id = node['id']
             node_table[node_id] = node
+            if '-' in node_id:
+                index = int(node_id.split('-')[2])
+                if node_id not in inv_table:
+                    inv_table[node_id] = list()
+                    # TODO: The 'marathon.mesos' domain should be configured through a config file
+                inv_table[node_id].append(node_id + '.marathon.mesos' + ':' + str(31000 + index))
+
 
         # This is one element of the "servicemap" list
         for node_id, ipaddrs in inv_table.items():
@@ -75,7 +88,7 @@ def route_parser(servicesim_config, inventory, default_port):
                     node_servicemap['next_hops'].append(hop)
                     servicemap.append(node_servicemap)
 
-    # Do some json tranformations
+    pprint(inv_table)
     pprint(servicemap)
     return servicemap, inv_table, client_node_ids, node_table
 
