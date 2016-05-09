@@ -6,7 +6,7 @@ import random
 import time
 from pool import UA_headers
 
-# TODO: setup logging
+# TODO: setup better logging
 
 class Simnode():
     def __init__(self, node_id, config, inventory, default_port):
@@ -14,7 +14,7 @@ class Simnode():
         self.routes = dict()
         self.status = 200
         self.latency = 0
-        self.infotable = {'node_id' : node_id,  'status': self.status, 'latency': self.latency}
+        self.infotable = {'node_id' : node_id,  'status': self.status, 'latency': self.latency, 'routes': self.routes}
 
         if self.node_id == 'controller':
             self.config = config

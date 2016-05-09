@@ -55,7 +55,7 @@ def setup_nodes(request, node_id):
     servicemap = node.servicemap
     print "Servicemap is: "
     pprint(servicemap)
-    if node_id == 'any' or node_id in node.inv_table.keys():
+    if node_id == 'all' or node_id in node.inv_table.keys():
         for route in servicemap:
             node_id = route['id']
             addresses = node.inv_table[node_id]
@@ -83,13 +83,11 @@ def info(request):
 
 @app.route('/status/<status>', methods = ['GET', 'POST'])
 def status(request, status):
-    print "SETTING STATUS CODE: ", status
     node.set_stat({'type': 'status', 'status': int(status)})
     return "Status code set to " + str(status)
 
 @app.route('/latency/<latency>', methods = ['GET', 'POST'])
 def latency(request, latency):
-    print "SETTING LATENCY: ", latency
     node.set_stat({'type': 'latency', 'latency': float(latency)})
     return "OK"
 
@@ -106,7 +104,6 @@ def setup(request):
     if request.method == 'POST':
         content = request.content.read()
         routes = json.loads(content)
-
         node.routes = routes
         return "OK"
     else:
@@ -118,16 +115,14 @@ def main_endpoint(request, node_id):
     """This is the main endpoint called by the main servicesim nodes to propagate all the requests.
     The route is a catch-all, and can accept any URI.
     """
-    request.setResponseCode(node.status)
-    node.make_requests()
+    status = node.infotable['status']
+    request.setResponseCode(status)
 
     latency = node.infotable['latency']
     if latency > 0:
         time.sleep(latency)
 
-    status = node.infotable['status']
-    if status != 200:
-        request.setResponseCode(status)
+    node.make_requests()
 
     return node.node_id
 

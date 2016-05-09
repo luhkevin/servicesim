@@ -6,6 +6,8 @@
         },
         {
             "id": "gamma",
+            "status": 500,
+            "latency": 2.0,
             "uris": ["/gamma"]
         },
         {

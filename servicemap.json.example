@@ -1,7 +1,6 @@
 [
     {
         "id": "SOURCE_NODE_ID",
-        "srcs": ["SOURCE_NODE_IP:SOURCE_NODE_PORT"],
         "next_hops": [
             {
                 "id": "DEST_NODE_ID",
