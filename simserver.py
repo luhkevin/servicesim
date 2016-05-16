@@ -157,7 +157,7 @@ if __name__ == '__main__':
     default_port = args.default_port
     node_type = args.node_type
 
-    node = Simnode(args.nodetype, config, inventory, default_port)
+    node = Simnode(args.nodetype, config, inventory)
     app.run(address, port)
 
 '''
