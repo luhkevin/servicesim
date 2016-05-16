@@ -7,12 +7,8 @@ def gen_spec(deploy_env, spec_output_dir, config):
     """This function generates a spec to use with the deployment environment of servicesim.
     E.g. if we are deploying servicesim in marathon, it will generate an 'options.json' file for each servicesim node that we deploy"""
 
-    servicemap, inv_table, client_node_table = route_parser(config)
+    servicemap, inv_table, client_node_table = route_parser(config, deploy_env=deploy_env)
     for route in servicemap:
-        node_id = route['id']
-        node_routes_json = json.dumps(route['next_hops'])
-        #print "NODE ROUTES JSON for ", node_id, str(node_routes_json)
-
         spec = {
             'servicesim': {
                 'node_id': '',
@@ -22,6 +18,9 @@ def gen_spec(deploy_env, spec_output_dir, config):
             }
         }
         spec_str = ''
+
+        node_id = route['id']
+        node_routes_json = json.dumps(route['next_hops'])
         if deploy_env == 'marathon':
             root, _, index = node_id.split('-')
             servicesim_spec = spec['servicesim']

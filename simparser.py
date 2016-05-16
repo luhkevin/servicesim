@@ -6,7 +6,7 @@ def tuple_to_str(tuple, delimiter):
     return str(tuple[0]) + ':' + str(tuple[1])
 
 # Transforms "servicesim.json" and the inventory file into "smap" -- servicemap.json
-def route_parser(servicesim_config, inventory=None):
+def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
     """
     The <inventory> is an ansible inventory file
 
@@ -73,10 +73,14 @@ def route_parser(servicesim_config, inventory=None):
 
             if '-' in node_id:
                 index = int(node_id.split('-')[2])
+
                 if node_id not in inv_table:
                     inv_table[node_id] = list()
-                    # TODO: The 'marathon.mesos' domain should be configured through a config file
-                inv_table[node_id].append(node_id + '.marathon.mesos' + ':' + str(31000 + index))
+
+                hostname = ''
+                if deploy_env == 'marathon':
+                    hostname = node_id + '.marathon.mesos'
+                inv_table[node_id].append(hostname + ':' + str(31000 + index))
 
         pprint(inv_table)
         # Create the servicemap structure
