@@ -89,7 +89,7 @@
       "dest": "beta-c-0"
     },
     {
-      "src": "beta",
+      "src": "beta-c-0",
       "dest": "gamma-c-0,eta-c-0,eta-c-1,eta-c-2"
     },
     {

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+docker push netsil/servicesim:dev
+
+docker tag netsil/servicesim:dev netsil/servicesim:dev-alpha
+docker tag netsil/servicesim:dev netsil/servicesim:dev-beta
+docker tag netsil/servicesim:dev netsil/servicesim:dev-delta
+docker tag netsil/servicesim:dev netsil/servicesim:dev-gamma
+docker tag netsil/servicesim:dev netsil/servicesim:dev-kappa
+docker tag netsil/servicesim:dev netsil/servicesim:dev-lambda
+docker tag netsil/servicesim:dev netsil/servicesim:dev-mu
+docker tag netsil/servicesim:dev netsil/servicesim:dev-omicron
+docker tag netsil/servicesim:dev netsil/servicesim:dev-theta
+
+docker push netsil/servicesim:dev-alpha
+docker push netsil/servicesim:dev-beta
+docker push netsil/servicesim:dev-delta
+docker push netsil/servicesim:dev-gamma
+docker push netsil/servicesim:dev-kappa
+docker push netsil/servicesim:dev-lambda
+docker push netsil/servicesim:dev-mu
+docker push netsil/servicesim:dev-omicron
+docker push netsil/servicesim:dev-theta
+
