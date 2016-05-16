@@ -34,6 +34,13 @@
             "description": "This is a node running as a container.",
             "latency": 0.15,
             "status": 200
+        },
+        {
+          "id": "gamma",
+          "description": "This node gets deployed manually. Thus, it does not get started as part of the initial servicesim cluster. Rather, an external operator -- through a jenkins job or the CLI -- will have to start it",
+          "latency": 0.25,
+          "status": 400,
+          "deploy": "manual"
         }
     ],
     "links": [

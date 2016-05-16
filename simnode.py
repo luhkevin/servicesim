@@ -9,7 +9,7 @@ from pool import UA_headers
 # TODO: setup better logging
 
 class Simnode():
-    def __init__(self, node_id, config, inventory, default_port):
+    def __init__(self, node_id, config, inventory):
         self.node_id = node_id
         self.routes = dict()
         self.status = 200
@@ -19,12 +19,18 @@ class Simnode():
         if self.node_id == 'controller':
             self.config = config
             self.inventory = inventory
-            self.default_port = default_port
 
             # This is for the controller node. Generates routes from servicemap config and inventory
-            self.servicemap, self.inv_table, self.client_node_ids, self.node_table = route_parser(config, inventory, default_port)
+            self.servicemap, self.inv_table, self.client_node_table = route_parser(config, inventory)
             self.node_uris = dict()
             self.infotable['servicemap'] = self.servicemap
+
+    def get_routes_from_env(self):
+        """This method loads this node's routing table (e.g. its next-hops) from the environment.
+        It will look for the variable 'NODE_ROUTES', which it will store as a JSON string.
+        """
+        NODE_ROUTES = str(os.environ.get('NODE_ROUTES', failobj='{}'))
+        self.routes = json.loads(NODE_ROUTES)
 
     def set_stat(self, stat):
         stat_type = stat['type']

@@ -1,0 +1,133 @@
+{
+  "nodes": [
+    {
+      "id": "alpha-c-0",
+      "uris": ["/public-lb"]
+    },
+    {
+      "id": "beta-c-0",
+      "uris": ["/frontend"]
+    },
+    {
+      "id": "gamma-c-0",
+      "uris": ["/internal-lb"]
+    },
+    {
+      "id": "delta-c-0",
+      "uris": ["/api-servers"]
+    },
+    {
+      "id": "delta-c-1",
+      "uris": ["/api-servers"]
+    },
+    {
+      "id": "delta-c-2",
+      "uris": ["/api-servers"]
+    },
+    {
+      "id": "epsilon-c-0",
+      "uris": ["/monitoring-service"]
+    },
+    {
+      "id": "zeta-c-0",
+      "uris": ["/analytics-service"]
+    },
+    {
+      "id": "eta-c-0",
+      "uris": ["/redis"]
+    },
+    {
+      "id": "eta-c-1",
+      "uris": ["/redis"]
+    },
+    {
+      "id": "eta-c-2",
+      "uris": ["/redis"]
+    },
+    {
+      "id": "theta-c-0",
+      "uris": ["/logging-service"]
+    },
+    {
+      "id": "iota-c-0",
+      "uris": ["/s3"]
+    },
+    {
+      "id": "kappa-c-0",
+      "uris": ["/db"]
+    },
+    {
+      "id": "kappa-c-1",
+      "uris": ["/db"]
+    },
+    {
+      "id": "kappa-c-2",
+      "uris": ["/db"]
+    },
+    {
+      "id": "lambda-c-0",
+      "uris": ["/auth"]
+    },
+    {
+      "id": "mu-c-0",
+      "uris": ["/configuration-management"]
+    },
+    {
+      "id": "omicron-c-0",
+      "latency": 0.75,
+      "status": 500,
+      "uris": ["/mail-service"]
+    },
+    {
+      "id": "pi-c-0",
+      "uris": ["/slack"]
+    }
+  ],
+  "links": [
+    {
+      "src": "alpha-c-0",
+      "dest": "beta-c-0"
+    },
+    {
+      "src": "beta",
+      "dest": "gamma-c-0,eta-c-0,eta-c-1,eta-c-2"
+    },
+    {
+      "src": "gamma-c-0",
+      "dest": "lambda-c-0,delta-c-0,delta-c-1,delta-c-2"
+    },
+    {
+      "src": "lambda-c-0",
+      "dest": "eta-c-0"
+    },
+    {
+      "src": "delta-c-0",
+      "dest": "theta-c-0,omicron-c-0,kappa-c-0,kappa-c-1,kappa-c-2"
+    },
+    {
+      "src": "theta-c-0",
+      "dest": "zeta-c-0,iota-c-0"
+    },
+    {
+      "src": "omicron-c-0",
+      "dest": "pi-c-0"
+    },
+    {
+      "src": "mu-c-0",
+      "dest": "kappa-c-0"
+    },
+    {
+      "src": "kappa-c-0",
+      "dest": "epsilon-c-0"
+    },
+    {
+      "src": "kappa-c-1",
+      "dest": "epsilon-c-0"
+    },
+    {
+      "src": "kappa-c-2",
+      "dest": "epsilon-c-0"
+    }
+  ],
+  "clients": ["alpha-c-0", "mu-c-0"]
+}

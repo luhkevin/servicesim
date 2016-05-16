@@ -16,7 +16,7 @@
         },
         {
             "id": "iota",
-            "uris": ["/iota"]
+            "uris": ["/gremlin"]
         }
     ],
     "links": [

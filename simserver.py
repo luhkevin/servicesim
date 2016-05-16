@@ -63,6 +63,7 @@ def setup_nodes(request, node_id):
                 # Do the initial setup
                 url = 'http://' + addr + '/setup'
                 node_routes_json = json.dumps(route['next_hops'])
+                print "NODE ROUTES JSON: ", str(node_routes_json)
                 d = treq.post(url, data=node_routes_json)
                 d.addCallback(node.ack_response)
 
@@ -72,9 +73,10 @@ def setup_nodes(request, node_id):
                     attr_url = 'http://' + addr + '/' + str(stat_key) + '/' + str(stat_val)
                     d = treq.post(attr_url)
                     d.addCallback(node.ack_response)
+        # TODO: Logic is a bit broken here because if we're only setting up one node_id, we still iterate through the entire list
+        return "OK"
     else:
         print "Skipping non-matched URL."
-    return "OK"
 
 # Main, non-controller node endpoints
 @app.route('/info', methods = ['GET'])
@@ -97,17 +99,25 @@ def echo(request):
 
 @app.route('/setup', methods = ['GET', 'POST'])
 def setup(request):
-    """This endpoint is called by the controller node to setup all the routes and attributes
-    of the main nodes.
+    """This endpoint is called by the controller node to setup all the routes (e.g. next hops) and attributes
+    of a main node.
     """
+    print "SETUP ENDPOINT"
     routes = None
     if request.method == 'POST':
         content = request.content.read()
         routes = json.loads(content)
+        print "ROUTES ARE: ", str(routes)
         node.routes = routes
         return "OK"
     else:
         print "Not a POST request."
+
+@app.route('/gremlin', methods = ['GET', 'POST'])
+def gremlin(request, node_id):
+    """This endpoint throws a 500 error.
+    """
+    raise Exception("This endpoint is faulty!")
 
 # "main_endpoint" tells a node to make requests to all of the nodes in its routing table
 @app.route('/<node_id>', methods = ['GET', 'POST'])
@@ -116,6 +126,7 @@ def main_endpoint(request, node_id):
     The route is a catch-all, and can accept any URI.
     """
     status = node.infotable['status']
+# TODO: If status code = 500, should we exit or raise an exception here?
     request.setResponseCode(status)
 
     latency = node.infotable['latency']
