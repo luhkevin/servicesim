@@ -26,6 +26,7 @@ def gen_spec(deploy_env, spec_output_dir, config):
             servicesim_spec = spec['servicesim']
             servicesim_spec['node_id'] = 'dev-' + str(node_id)
             servicesim_spec['node_root_id'] = str(root)
+            servicesim_spec['node_image_tag'] = 'dev-' + str(root)
             servicesim_spec['node_routes'] = str(node_routes_json)
             servicesim_spec['node_port'] = 31000 + int(index)
             servicesim_spec['node_type'] = 'regular'
