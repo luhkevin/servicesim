@@ -79,7 +79,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
 
                 hostname = ''
                 if deploy_env == 'marathon':
-                    hostname = node_id + '.marathon.mesos'
+                    hostname = 'dev-' + node_id + '.marathon.mesos'
                 inv_table[node_id].append(hostname + ':' + str(31000 + index))
 
         pprint(inv_table)
@@ -100,7 +100,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                         hop['dests'] = inv_table[dest_node_id]
                         hop['uris'] = node_table[dest_node_id]['uris']
                         route['next_hops'].append(hop)
-                    servicemap.append(route)
+            servicemap.append(route)
 
         pprint(servicemap)
     return servicemap, inv_table, client_node_table

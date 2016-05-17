@@ -1,37 +1,37 @@
 import time
 import requests
 import argparse
+import json
 
-def run(address, port, latency):
-    # First, sleep so the controller node has time to spin up
-    time.sleep(3)
+def parse_client_nodes(sim_config_path):
+    client_urls = list()
+    with open(sim_config_path, 'r') as sim_config:
+        config = json.load(sim_config)
+        client_node_ids = config['clients']
+        nodes = config['nodes']
+        for node in nodes:
+            node_id = node['id']
+            if node_id in client_node_ids:
+                for uri in node['uris']:
+                    port = 31000 + int(node_id.split('-')[2])
+                    client_urls.append('dev-' + node_id + '.marathon.mesos' + ':' + str(port) + uri)
+    return client_urls
 
-    # Send a SETUP message to each node
-    url = 'http://' + str(address) + ':' + str(port)
-    requests.post(url + '/setup_nodes/all')
-
-    # Sleep for the other nodes' to accept their configuration
-    time.sleep(3)
-
-    # Setup some stats
-    #requests.post(url + '/setstat/status/gamma/404')
-    #requests.post(url + '/setstat/status/kappa/404')
-    #requests.post(url + '/setstat/status/iota/500')
-    #requests.post(url + '/setstat/latency/iota/2.0')
-
+def run(latency, config):
+    client_urls = parse_client_nodes(config)
+    print client_urls
     # Start the client
-    while True:
-        time.sleep(float(latency))
-        requests.post(url + '/start/all')
-
+    #while True:
+    #    for url in client_urls:
+    #        time.sleep(float(latency))
+    #        requests.post(url + '/start/all')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-a', '--address', default='localhost', help="Specify the address of the controller")
-    parser.add_argument('-p', '--port', default='8080', help="Specify the port of the controller")
     parser.add_argument('-l', '--latency', default='1.0', help="Specify the latency of requests")
+    parser.add_argument('-c', '--config', default='', help='Servicesim config')
 
     args = parser.parse_args()
 
-    run(args.address, args.port, args.latency)
+    run(args.latency, args.config)
 

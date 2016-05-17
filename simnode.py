@@ -1,6 +1,7 @@
 import json
 import treq
 import logging
+import os
 from simparser import route_parser
 import random
 import time
@@ -14,8 +15,11 @@ class Simnode():
         self.routes = dict()
         self.status = 200
         self.latency = 0
-        self.infotable = {'node_id' : node_id,  'status': self.status, 'latency': self.latency, 'routes': self.routes}
 
+        # Load routes from environment
+        self.get_routes_from_env()
+
+        self.infotable = {'node_id' : node_id,  'status': self.status, 'latency': self.latency, 'routes': self.routes}
         if self.node_id == 'controller':
             self.config = config
             self.inventory = inventory
@@ -29,7 +33,12 @@ class Simnode():
         """This method loads this node's routing table (e.g. its next-hops) from the environment.
         It will look for the variable 'NODE_ROUTES', which it will store as a JSON string.
         """
+        print "Getting routes from the environment"
         NODE_ROUTES = str(os.environ.get('NODE_ROUTES', failobj='{}'))
+
+        # Quick hack to replace escaped quotes. Marathon converts the quotes to '&quot;' when it set the env var...
+        if NODE_ROUTES != {}:
+            NODE_ROUTES = NODE_ROUTES.replace('&quot;', '"')
         self.routes = json.loads(NODE_ROUTES)
 
     def set_stat(self, stat):
