@@ -79,7 +79,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
 
                 hostname = ''
                 if deploy_env == 'marathon':
-                    hostname = node_id + '.marathon.mesos'
+                    hostname = 'dev-' + node_id + '.marathon.mesos'
                 inv_table[node_id].append(hostname + ':' + str(31000 + index))
 
         pprint(inv_table)
