@@ -1,85 +1,85 @@
 {
   "nodes": [
     {
-      "id": "alpha-c-0",
+      "id": "alpha-c",
       "count": 1,
       "port": 31000,
       "uris": ["/public-lb"]
     },
     {
-      "id": "beta-c-0",
+      "id": "beta-c",
       "count": 1,
       "port": 31001,
       "uris": ["/frontend"]
     },
     {
-      "id": "gamma-c-0",
+      "id": "gamma-c",
       "count": 1,
       "port": 31002,
       "uris": ["/internal-lb"]
     },
     {
-      "id": "delta-c-0",
+      "id": "delta-c",
       "count": 3,
       "port": 31003,
       "uris": ["/api-servers"]
     },
     {
-      "id": "epsilon-c-0",
+      "id": "epsilon-c",
       "count": 1,
       "port": 31004,
       "uris": ["/monitoring-service"]
     },
     {
-      "id": "zeta-c-0",
+      "id": "zeta-c",
       "count": 1,
       "port": 31005,
       "uris": ["/analytics-service"]
     },
     {
-      "id": "eta-c-0",
+      "id": "eta-c",
       "count": 3,
       "port": 31006,
       "uris": ["/redis"]
     },
     {
-      "id": "theta-c-0",
+      "id": "theta-c",
       "count": 1,
       "port": 31007,
       "uris": ["/logging-service"]
     },
     {
-      "id": "iota-c-0",
+      "id": "iota-c",
       "count": 1,
       "port": 31008,
       "uris": ["/s3"]
     },
     {
-      "id": "kappa-c-0",
+      "id": "kappa-c",
       "count": 3,
       "port": 31009,
       "uris": ["/db"]
     },
     {
-      "id": "lambda-c-0",
+      "id": "lambda-c",
       "count": 1,
       "port": 31010,
       "uris": ["/auth"]
     },
     {
-      "id": "mu-c-0",
+      "id": "mu-c",
       "count": 1,
       "port": 31011,
       "uris": ["/configuration-management"]
     },
     {
-      "id": "omicron-c-0",
+      "id": "omicron-c",
       "count": 1,
       "port": 31012,
       "uris": ["/mail-service"]
     },
     {
-      "id": "pi-c-0",
+      "id": "pi-c",
       "count": 1,
       "port": 31013,
       "uris": ["/slack"]

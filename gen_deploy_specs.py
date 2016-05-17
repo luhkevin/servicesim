@@ -22,7 +22,7 @@ def gen_spec(deploy_env, spec_output_dir, config):
         cnode_id = route['id']
         node_routes_json = json.dumps(route['next_hops'])
         if deploy_env == 'marathon':
-            root, _ = cnode_id.split('-')
+            root, _, _ = cnode_id.split('-')
             servicesim_spec = spec['servicesim']
             servicesim_spec['node_id'] = 'dev-' + str(cnode_id)
             servicesim_spec['node_root_id'] = str(root)

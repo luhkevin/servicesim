@@ -100,15 +100,19 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
             route['next_hops'] = list()
             route['port'] = node_table[node_id]['port']
             for link in links:
-                hop = dict()
-                if node_id == link['src']:
+                node_id_prefix = node_id.rpartition('-')[0]
+                if node_id_prefix == link['src']:
                     # Check for multiple dests in a link entry
                     dests = link['dest'].split(',')
                     for dest_node_id in dests:
-                        hop['id'] = dest_node_id
-                        hop['dests'] = inv_table[dest_node_id]
-                        hop['uris'] = node_table[dest_node_id]['uris']
-                        route['next_hops'].append(hop)
+                        count = node_table[dest_node_id + '-0']['count']
+                        for i in range(int(count)):
+                            hop = dict()
+                            dest_cnode_id = dest_node_id + '-' + str(i)
+                            hop['id'] = dest_cnode_id
+                            hop['dests'] = inv_table[dest_cnode_id]
+                            hop['uris'] = node_table[dest_cnode_id]['uris']
+                            route['next_hops'].append(hop)
             servicemap.append(route)
 
         print "Servicemap: "
