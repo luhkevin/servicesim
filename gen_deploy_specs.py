@@ -29,7 +29,7 @@ def gen_spec(deploy_env, spec_output_dir, config):
             servicesim_spec['node_image_tag'] = 'dev-' + str(root)
             servicesim_spec['node_routes'] = str(node_routes_json)
             servicesim_spec['node_port'] = 31000 + int(index)
-            servicesim_spec['node_type'] = 'regular'
+            servicesim_spec['node_func'] = 'regular'
 
         spec_str = json.dumps(spec)
 
