@@ -5,6 +5,14 @@ from pprint import pprint
 def tuple_to_str(tuple, delimiter):
     return str(tuple[0]) + ':' + str(tuple[1])
 
+def fill_attr_table(node, node_id, attributes):
+    node_attr= dict()
+    if 'latency' in node:
+        node_attr['latency'] = node['latency']
+    if 'status' in node:
+        node_attr['status'] = node['status']
+    attributes[node_id] = node_attr
+
 # Transforms "servicesim.json" and the inventory file into "smap" -- servicemap.json
 def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
     """
@@ -55,33 +63,33 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
         links = sim_config['links']
 
         # Update node data from servicesim.json
-        # Container addresses (e.g. hosts) are hardcoded to node_id.marathon.mesos (assume we use Mesos-DNS)
-        # Container ports are hardcoded to 31000 + n, where n is a number in the node id "node-c-n"
         # Update other attributes too -- latency and status code
         node_table = dict()
         attributes = dict()
         for node in nodes:
             node_attr = dict()
             node_id = node['id']
-            node_table[node_id] = node
-
-            if 'latency' in node:
-                node_attr['latency'] = node['latency']
-            if 'status' in node:
-                node_attr['status'] = node ['status']
-            attributes[node_id] = node_attr
 
             if '-' in node_id:
-                index = int(node_id.split('-')[2])
+                count = node['count']
+                for i in range(int(count)):
+                    # A 'cnode_id' is a container node id
+                    cnode_id = node_id + '-' + str(i)
+                    if cnode_id not in inv_table:
+                        inv_table[cnode_id] = list()
 
-                if node_id not in inv_table:
-                    inv_table[node_id] = list()
+                    hostname = ''
+                    port = int(node['port'])
+                    if deploy_env == 'marathon':
+                        hostname = 'dev-' + cnode_id + '.marathon.mesos'
+                    inv_table[cnode_id].append(hostname + ':' + str(port))
+                    node_table[cnode_id] = node
+                    fill_attr_table(node, cnode_id, attributes)
+            else:
+                node_table[node_id] = node
+                fill_attr_table(node, node_id, attributes)
 
-                hostname = ''
-                if deploy_env == 'marathon':
-                    hostname = 'dev-' + node_id + '.marathon.mesos'
-                inv_table[node_id].append(hostname + ':' + str(31000 + index))
-
+        print "Inventory table: "
         pprint(inv_table)
         # Create the servicemap structure
         # This is one element of the "servicemap" list
@@ -90,6 +98,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
             route['id'] = node_id
             route['attr'] = attributes[node_id]
             route['next_hops'] = list()
+            route['port'] = node_table[node_id]['port']
             for link in links:
                 hop = dict()
                 if node_id == link['src']:
@@ -102,6 +111,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                         route['next_hops'].append(hop)
             servicemap.append(route)
 
+        print "Servicemap: "
         pprint(servicemap)
     return servicemap, inv_table, client_node_table
 

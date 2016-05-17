@@ -14,22 +14,22 @@ def gen_spec(deploy_env, spec_output_dir, config):
                 'node_id': '',
                 'node_routes': '',
                 'node_port': 0,
-                'node_type': ''
+                'node_function': ''
             }
         }
         spec_str = ''
 
-        node_id = route['id']
+        cnode_id = route['id']
         node_routes_json = json.dumps(route['next_hops'])
         if deploy_env == 'marathon':
-            root, _, index = node_id.split('-')
+            root, _ = cnode_id.split('-')
             servicesim_spec = spec['servicesim']
-            servicesim_spec['node_id'] = 'dev-' + str(node_id)
+            servicesim_spec['node_id'] = 'dev-' + str(cnode_id)
             servicesim_spec['node_root_id'] = str(root)
             servicesim_spec['node_image_tag'] = 'dev-' + str(root)
             servicesim_spec['node_routes'] = str(node_routes_json)
-            servicesim_spec['node_port'] = 31000 + int(index)
-            servicesim_spec['node_type'] = 'regular'
+            servicesim_spec['node_port'] = route['port']
+            servicesim_spec['node_function'] = 'regular'
 
         spec_str = json.dumps(spec)
 

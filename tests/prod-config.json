@@ -2,132 +2,126 @@
   "nodes": [
     {
       "id": "alpha-c-0",
+      "count": 1,
+      "port": 31000,
       "uris": ["/public-lb"]
     },
     {
       "id": "beta-c-0",
+      "count": 1,
+      "port": 31001,
       "uris": ["/frontend"]
     },
     {
       "id": "gamma-c-0",
+      "count": 1,
+      "port": 31002,
       "uris": ["/internal-lb"]
     },
     {
       "id": "delta-c-0",
-      "uris": ["/api-servers"]
-    },
-    {
-      "id": "delta-c-1",
-      "uris": ["/api-servers"]
-    },
-    {
-      "id": "delta-c-2",
+      "count": 3,
+      "port": 31003,
       "uris": ["/api-servers"]
     },
     {
       "id": "epsilon-c-0",
+      "count": 1,
+      "port": 31004,
       "uris": ["/monitoring-service"]
     },
     {
       "id": "zeta-c-0",
+      "count": 1,
+      "port": 31005,
       "uris": ["/analytics-service"]
     },
     {
       "id": "eta-c-0",
-      "uris": ["/redis"]
-    },
-    {
-      "id": "eta-c-1",
-      "uris": ["/redis"]
-    },
-    {
-      "id": "eta-c-2",
+      "count": 3,
+      "port": 31006,
       "uris": ["/redis"]
     },
     {
       "id": "theta-c-0",
+      "count": 1,
+      "port": 31007,
       "uris": ["/logging-service"]
     },
     {
       "id": "iota-c-0",
+      "count": 1,
+      "port": 31008,
       "uris": ["/s3"]
     },
     {
       "id": "kappa-c-0",
-      "uris": ["/db"]
-    },
-    {
-      "id": "kappa-c-1",
-      "uris": ["/db"]
-    },
-    {
-      "id": "kappa-c-2",
+      "count": 3,
+      "port": 31009,
       "uris": ["/db"]
     },
     {
       "id": "lambda-c-0",
+      "count": 1,
+      "port": 31010,
       "uris": ["/auth"]
     },
     {
       "id": "mu-c-0",
+      "count": 1,
+      "port": 31011,
       "uris": ["/configuration-management"]
     },
     {
       "id": "omicron-c-0",
-      "latency": 0.75,
-      "status": 500,
+      "count": 1,
+      "port": 31012,
       "uris": ["/mail-service"]
     },
     {
       "id": "pi-c-0",
+      "count": 1,
+      "port": 31013,
       "uris": ["/slack"]
     }
   ],
   "links": [
     {
-      "src": "alpha-c-0",
-      "dest": "beta-c-0"
+      "src": "alpha-c",
+      "dest": "beta-c"
     },
     {
-      "src": "beta-c-0",
-      "dest": "gamma-c-0,eta-c-0,eta-c-1,eta-c-2"
+      "src": "beta-c",
+      "dest": "gamma-c,eta-c"
     },
     {
-      "src": "gamma-c-0",
-      "dest": "lambda-c-0,delta-c-0,delta-c-1,delta-c-2"
+      "src": "gamma-c",
+      "dest": "lambda-c,delta-c"
     },
     {
-      "src": "lambda-c-0",
-      "dest": "eta-c-0"
+      "src": "lambda-c",
+      "dest": "eta-c"
     },
     {
-      "src": "delta-c-0",
-      "dest": "theta-c-0,omicron-c-0,kappa-c-0,kappa-c-1,kappa-c-2"
+      "src": "delta-c",
+      "dest": "theta-c,omicron-c,kappa-c"
     },
     {
-      "src": "theta-c-0",
-      "dest": "zeta-c-0,iota-c-0"
+      "src": "theta-c",
+      "dest": "zeta-c,iota-c"
     },
     {
-      "src": "omicron-c-0",
-      "dest": "pi-c-0"
+      "src": "omicron-c",
+      "dest": "pi-c"
     },
     {
-      "src": "mu-c-0",
-      "dest": "kappa-c-0"
+      "src": "mu-c",
+      "dest": "kappa-c"
     },
     {
-      "src": "kappa-c-0",
-      "dest": "epsilon-c-0"
-    },
-    {
-      "src": "kappa-c-1",
-      "dest": "epsilon-c-0"
-    },
-    {
-      "src": "kappa-c-2",
-      "dest": "epsilon-c-0"
+      "src": "kappa-c",
+      "dest": "epsilon-c"
     }
   ],
-  "clients": ["alpha-c-0", "mu-c-0"]
+  "clients": ["alpha-c", "mu-c"]
 }
