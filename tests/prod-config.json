@@ -40,6 +40,7 @@
       "id": "eta-c",
       "count": 3,
       "port": 31006,
+      "lbport": "10006",
       "uris": ["/redis"]
     },
     {
@@ -100,6 +101,7 @@
     },
     {
       "src": "lambda-c",
+      "lb": "true",
       "dest": "eta-c"
     },
     {

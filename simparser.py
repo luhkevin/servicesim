@@ -23,6 +23,8 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
         Each element in the servicemap is a dict that consists of the mappings:
             <'id', node_id>
             <'next_hops', list of next hops>
+            <'port', node host port>
+            <'lbport', node load balancer port>
 
         **inv_table** -- A dict with the mapping:
             <node_id, node_addresses>
@@ -99,20 +101,37 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
             route['attr'] = attributes[node_id]
             route['next_hops'] = list()
             route['port'] = node_table[node_id]['port']
+
+            # Fill routing table with lbport
+            if node_table[node_id].has_key('lbport'):
+                route['lbport'] = node_table[node_id]['lbport']
+
             for link in links:
                 node_id_prefix = node_id.rpartition('-')[0]
                 if node_id_prefix == link['src']:
                     # Check for multiple dests in a link entry
                     dests = link['dest'].split(',')
                     for dest_node_id in dests:
-                        count = node_table[dest_node_id + '-0']['count']
-                        for i in range(int(count)):
+                        # Resolve load-balancer routing
+                        if link.has_key('lb') and link['lb'] == 'true':
                             hop = dict()
-                            dest_cnode_id = dest_node_id + '-' + str(i)
-                            hop['id'] = dest_cnode_id
-                            hop['dests'] = inv_table[dest_cnode_id]
-                            hop['uris'] = node_table[dest_cnode_id]['uris']
+                            hop['id'] = dest_node_id
+                            hop['uris'] = node_table[dest_node_id + '-0']['uris']
+
+                            # Get load-balancer port from node
+                            lbport = node_table[dest_node_id + '-0']['lbport']
+                            if deploy_env == 'marathon':
+                                hop['dest'] = 'marathon-lb.marathon.mesos' + ':' + str(lbport)
                             route['next_hops'].append(hop)
+                        else:
+                            count = node_table[dest_node_id + '-0']['count']
+                            for i in range(int(count)):
+                                hop = dict()
+                                dest_cnode_id = dest_node_id + '-' + str(i)
+                                hop['id'] = dest_cnode_id
+                                hop['dest'] = inv_table[dest_cnode_id]
+                                hop['uris'] = node_table[dest_cnode_id]['uris']
+                                route['next_hops'].append(hop)
             servicemap.append(route)
 
         print "Servicemap: "

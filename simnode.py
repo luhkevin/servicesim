@@ -54,11 +54,11 @@ class Simnode():
         ua_header = random.choice(UA_headers)
         headers = { ua_header[0]: ua_header[1] }
         for hop in self.routes:
-            for dest in hop['dests']:
-                for uri in hop['uris']:
-                    url = 'http://' + dest + uri
-                    df = treq.get(url, headers=headers, persistent=False)
-                    df.addCallback(self.ack_response)
+            dest = hop['dest']
+            for uri in hop['uris']:
+                url = 'http://' + dest + uri
+                df = treq.get(url, headers=headers, persistent=False)
+                df.addCallback(self.ack_response)
 
     # TODO: Implement and use this
     def check_routes(self, node_servicemap):

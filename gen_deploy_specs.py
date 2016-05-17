@@ -9,14 +9,7 @@ def gen_spec(deploy_env, spec_output_dir, config):
 
     servicemap, inv_table, client_node_table = route_parser(config, deploy_env=deploy_env)
     for route in servicemap:
-        spec = {
-            'servicesim': {
-                'node_id': '',
-                'node_routes': '',
-                'node_port': 0,
-                'node_function': ''
-            }
-        }
+        spec = { 'servicesim': {} }
         spec_str = ''
 
         cnode_id = route['id']
@@ -30,6 +23,8 @@ def gen_spec(deploy_env, spec_output_dir, config):
             servicesim_spec['node_routes'] = str(node_routes_json)
             servicesim_spec['node_port'] = route['port']
             servicesim_spec['node_function'] = 'regular'
+            if route.has_key('lbport'):
+                servicesim_spec['lbport'] = route['lbport']
 
         spec_str = json.dumps(spec)
 
