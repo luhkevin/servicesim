@@ -100,7 +100,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                         hop['dests'] = inv_table[dest_node_id]
                         hop['uris'] = node_table[dest_node_id]['uris']
                         route['next_hops'].append(hop)
-                    servicemap.append(route)
+            servicemap.append(route)
 
         pprint(servicemap)
     return servicemap, inv_table, client_node_table
