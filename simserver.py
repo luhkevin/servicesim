@@ -146,7 +146,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--config', default='', help="The config file. Only for the controller node")
     parser.add_argument('-i', '--inventory', default='', help="The inventory file")
     parser.add_argument('-d', '--default_port', default='8080', help="The default port for each non-controller servicesim node")
-    parser.add_argument('-f', '--node_function', default='regular', help="The function of the node")
+    parser.add_argument('-f', '--function', default='regular', help="The function of the node")
 
     args = parser.parse_args()
 
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     config = args.config
     inventory = args.inventory
     default_port = args.default_port
-    node_type = args.node_type
+    function = args.function
 
     node = Simnode(args.nodetype, config, inventory)
     app.run(address, port)
