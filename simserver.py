@@ -113,8 +113,8 @@ def setup(request):
     else:
         print "Not a POST request."
 
-@app.route('/gremlin', methods = ['GET', 'POST'])
-def gremlin(request, node_id):
+@app.route('/gremlin/<path>', methods = ['GET', 'POST'])
+def gremlin(request, path):
     """This endpoint throws a 500 error.
     """
     raise Exception("This endpoint is faulty!")

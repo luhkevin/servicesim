@@ -34,7 +34,8 @@
       "id": "zeta-c",
       "count": 1,
       "port": 31005,
-      "uris": ["/analytics-service"]
+      "function": "faulty404",
+      "uris": ["/gremlin/analytics-service"]
     },
     {
       "id": "eta-c",

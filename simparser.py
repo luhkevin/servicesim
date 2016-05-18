@@ -26,6 +26,16 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
             <'port', node host port>
             <'lbport', node load balancer port>
 
+        Each element in the list of next hops has the form:
+        {
+            'dests': [host:port, ..],
+            'id': 'node-id',
+            'uris': ['/endpoint1', ...]
+        }
+
+        If the next-hop is reached via load-balancer, then the 'id' field will contain the general/root node id
+        E.g. 'alpha-c'. This is opposed to the container node id, e.g. 'alpha-c-0'
+
         **inv_table** -- A dict with the mapping:
             <node_id, node_addresses>
         where 'node_addresses' is ["host:port", ...]
