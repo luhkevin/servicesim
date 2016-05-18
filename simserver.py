@@ -119,6 +119,12 @@ def gremlin(request, path):
     """
     raise Exception("This endpoint is faulty!")
 
+@app.route('/goblin', methods = ['GET', 'POST'])
+def goblin(request, path):
+    """This endpoint throws a 404 error. Just add another path to 'goblin' and the response will 404.
+    """
+    print "404 error!"
+
 # "main_endpoint" tells a node to make requests to all of the nodes in its routing table
 @app.route('/<node_id>', methods = ['GET', 'POST'])
 def main_endpoint(request, node_id):
