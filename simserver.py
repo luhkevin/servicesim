@@ -113,17 +113,17 @@ def setup(request):
     else:
         print "Not a POST request."
 
-@app.route('/gremlin/<path>', methods = ['GET', 'POST'])
-def gremlin(request, path):
+@app.route('/gremlin', methods = ['GET', 'POST'])
+def gremlin(request):
     """This endpoint throws a 500 error.
     """
-    raise Exception("This endpoint is faulty!")
+    raise Exception("This endpoint is throwing a 500 error!")
 
 @app.route('/goblin', methods = ['GET', 'POST'])
 def goblin(request, path):
     """This endpoint throws a 404 error. Just add another path to 'goblin' and the response will 404.
     """
-    print "404 error!"
+    print "This endpoint is throwing a 404 error!"
 
 # "main_endpoint" tells a node to make requests to all of the nodes in its routing table
 @app.route('/<node_id>', methods = ['GET', 'POST'])
@@ -132,7 +132,6 @@ def main_endpoint(request, node_id):
     The route is a catch-all, and can accept any URI.
     """
     status = node.infotable['status']
-# TODO: If status code = 500, should we exit or raise an exception here?
     request.setResponseCode(status)
 
     latency = node.infotable['latency']
