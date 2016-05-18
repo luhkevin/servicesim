@@ -18,15 +18,16 @@ def gen_spec(deploy_env, spec_output_dir, config):
             root, _, _ = cnode_id.split('-')
             servicesim_spec = spec['servicesim']
             servicesim_spec['node_id'] = 'dev-' + str(cnode_id)
-            servicesim_spec['node_root_id'] = str(root)
-            servicesim_spec['node_image_tag'] = 'dev-' + str(root)
-            servicesim_spec['node_routes'] = str(node_routes_json)
+            servicesim_spec['node_type'] = 'dev-' + str(root)
             servicesim_spec['node_port'] = route['port']
             servicesim_spec['node_function'] = 'regular'
+            servicesim_spec['node_routes'] = str(node_routes_json)
+            servicesim_spec['node_image_tag'] = 'dev-' + str(root)
             if route.has_key('lbport'):
                 servicesim_spec['lbport'] = route['lbport']
 
         spec_str = json.dumps(spec)
+
 
         with open(os.path.join(spec_output_dir, 'servicesim-' + spec['servicesim']['node_id'] + '-options.json'), 'w') as specfile:
             specfile.write(spec_str)
