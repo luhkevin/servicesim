@@ -24,7 +24,7 @@ def gen_spec(deploy_env, spec_output_dir, config):
             servicesim_spec['node_routes'] = str(node_routes_json)
             servicesim_spec['node_image_tag'] = 'dev-' + str(root)
             if route.has_key('lbport'):
-                servicesim_spec['lbport'] = route['lbport']
+                servicesim_spec['node_lbport'] = route['lbport']
 
         spec_str = json.dumps(spec)
 
