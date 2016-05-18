@@ -19,12 +19,12 @@ def gen_spec(deploy_env, spec_output_dir, config):
             servicesim_spec = spec['servicesim']
             servicesim_spec['node_id'] = 'dev-' + str(cnode_id)
             servicesim_spec['node_type'] = 'dev-' + str(root)
-            servicesim_spec['node_port'] = route['port']
+            servicesim_spec['node_port'] = int(route['port'])
             servicesim_spec['node_function'] = 'regular'
             servicesim_spec['node_routes'] = str(node_routes_json)
             servicesim_spec['node_image_tag'] = 'dev-' + str(root)
             if route.has_key('lbport'):
-                servicesim_spec['node_lbport'] = route['lbport']
+                servicesim_spec['node_lbport'] = int(route['lbport'])
 
         spec_str = json.dumps(spec)
 
