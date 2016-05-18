@@ -13,7 +13,7 @@ def parse_client_nodes(sim_config_path):
             node_id = node['id']
             if node_id in client_node_ids:
                 for uri in node['uris']:
-                    port = 31000 + int(node_id.split('-')[2])
+                    port = node['port']
                     client_urls.append('dev-' + node_id + '.marathon.mesos' + ':' + str(port) + uri)
     return client_urls
 

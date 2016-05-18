@@ -121,7 +121,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                             # Get load-balancer port from node
                             lbport = node_table[dest_node_id + '-0']['lbport']
                             if deploy_env == 'marathon':
-                                hop['dest'] = 'marathon-lb.marathon.mesos' + ':' + str(lbport)
+                                hop['dests'] = ['marathon-lb.marathon.mesos' + ':' + str(lbport)]
                             route['next_hops'].append(hop)
                         else:
                             count = node_table[dest_node_id + '-0']['count']
@@ -129,7 +129,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                                 hop = dict()
                                 dest_cnode_id = dest_node_id + '-' + str(i)
                                 hop['id'] = dest_cnode_id
-                                hop['dest'] = inv_table[dest_cnode_id]
+                                hop['dests'] = inv_table[dest_cnode_id]
                                 hop['uris'] = node_table[dest_cnode_id]['uris']
                                 route['next_hops'].append(hop)
             servicemap.append(route)
