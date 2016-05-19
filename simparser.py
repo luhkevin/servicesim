@@ -135,21 +135,13 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                     # Check for multiple dests in a link entry
                     dests = link['dest'].split(',')
                     for dest_node_id in dests:
-                        # Resolve load-balancer routing
                         # TODO: why are we using dest_node_id + '-0' and referencing node_table? Can't we use the original 'nodes' structure? We should be using the node_id_prefix instead of extending to the cnode id
+
                         if link.has_key('lb') and link['lb'] == 'true':
+                            # Resolve load-balancer routing
                             hop = dict()
                             hop['id'] = dest_node_id
-
-                            if 'function' in route:
-                                if route['function'] == 'faulty404':
-                                    hop['uris'] = ['/goblin/faulty']
-                                elif route['function'] == 'faulty500':
-                                    hop['uris'] = ['/gremlin']
-                                else:
-                                    print "Node function not supported."
-                            else:
-                                hop['uris'] = node_table[dest_node_id + '-0']['uris']
+                            hop['uris'] = node_table[dest_node_id + '-0']['uris']
 
                             # Get load-balancer port from node
                             lbport = node_table[dest_node_id + '-0']['lbport']
@@ -165,6 +157,20 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                                 hop['dests'] = inv_table[dest_cnode_id]
                                 hop['uris'] = node_table[dest_cnode_id]['uris']
                                 route['next_hops'].append(hop)
+
+                    # This section should be applied after the lb/standard routing table is constructed
+                    # We basically want to overwrite all the paths in the routing table with the faulty paths
+                    if 'function' in route:
+                        faulty_uri = list()
+                        # Resolve faulty routes
+                        if route['function'] == 'faulty404':
+                            faulty_uri = ['/goblin/faulty']
+                        elif route['function'] == 'faulty500':
+                            faulty_uri = ['/gremlin']
+                        else:
+                            print "Node function not supported."
+                        for hop in route['next_hops']:
+                            hop['uris'] = faulty_uri
 
             servicemap.append(route)
 
