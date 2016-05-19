@@ -24,7 +24,12 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
             <'id', node_id>
             <'next_hops', list of next hops>
             <'port', node host port>
+            --------
+
+            optional:
             <'lbport', node load balancer port>
+            <'deploy', deploy type>
+            <'function', node function>
 
         Each element in the list of next hops has the form:
         {
@@ -112,6 +117,14 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
             route['next_hops'] = list()
             route['port'] = node_table[node_id]['port']
 
+            # Resolve manual or automatic deploy
+            if node_table[node_id].has_key('deploy-type'):
+                route['deploy-type'] = node_table[node_id]['deploy-type']
+
+            # Resolve node function
+            if node_table[node_id].has_key('function'):
+                route['function'] = node_table[node_id]['function']
+
             # Fill routing table with lbport
             if node_table[node_id].has_key('lbport'):
                 route['lbport'] = node_table[node_id]['lbport']
@@ -123,10 +136,20 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                     dests = link['dest'].split(',')
                     for dest_node_id in dests:
                         # Resolve load-balancer routing
+                        # TODO: why are we using dest_node_id + '-0' and referencing node_table? Can't we use the original 'nodes' structure? We should be using the node_id_prefix instead of extending to the cnode id
                         if link.has_key('lb') and link['lb'] == 'true':
                             hop = dict()
                             hop['id'] = dest_node_id
-                            hop['uris'] = node_table[dest_node_id + '-0']['uris']
+
+                            if 'function' in route:
+                                if route['function'] == 'faulty404':
+                                    hop['uris'] = ['/goblin/faulty']
+                                elif route['function'] == 'faulty500':
+                                    hop['uris'] = ['/gremlin']
+                                else:
+                                    print "Node function not supported."
+                            else:
+                                hop['uris'] = node_table[dest_node_id + '-0']['uris']
 
                             # Get load-balancer port from node
                             lbport = node_table[dest_node_id + '-0']['lbport']
@@ -142,6 +165,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                                 hop['dests'] = inv_table[dest_cnode_id]
                                 hop['uris'] = node_table[dest_cnode_id]['uris']
                                 route['next_hops'].append(hop)
+
             servicemap.append(route)
 
         print "Servicemap: "

@@ -34,14 +34,31 @@
       "id": "zeta-c",
       "count": 1,
       "port": 31005,
-      "function": "faulty404",
-      "uris": ["/gremlin/analytics-service"]
+      "function": "faulty500",
+      "uris": ["/gremlin"]
     },
     {
       "id": "eta-c",
       "count": 3,
       "port": 31006,
       "lbport": "10006",
+      "uris": ["/redis"]
+    },
+    {
+      "id": "eta_v2-c",
+      "count": 1,
+      "port": 31006,
+      "lbport": "10006",
+      "deploy-type": "manual",
+      "function": "faulty404",
+      "uris": ["/redis"]
+    },
+    {
+      "id": "eta_v3-c",
+      "count": 1,
+      "port": 31006,
+      "lbport": "10006",
+      "deploy-type": "manual",
       "uris": ["/redis"]
     },
     {
@@ -84,7 +101,8 @@
       "id": "pi-c",
       "count": 1,
       "port": 31013,
-      "uris": ["/slack"]
+      "function": "faulty404",
+      "uris": ["/goblin/faulty"]
     }
   ],
   "links": [
@@ -106,6 +124,16 @@
       "dest": "eta-c"
     },
     {
+      "src": "lambda-c",
+      "lb": "true",
+      "dest": "eta_v2-c"
+    },
+    {
+      "src": "lambda-c",
+      "lb": "true",
+      "dest": "eta_v3-c"
+    },
+    {
       "src": "delta-c",
       "dest": "theta-c,omicron-c,kappa-c"
     },
@@ -116,6 +144,10 @@
     {
       "src": "omicron-c",
       "dest": "pi-c"
+    },
+    {
+      "src": "eta_v2-c",
+      "dest": "omicron-c"
     },
     {
       "src": "mu-c",
