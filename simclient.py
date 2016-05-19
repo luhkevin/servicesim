@@ -26,7 +26,11 @@ def run(latency, config):
     while True:
         for url in client_urls:
             time.sleep(float(latency))
-            requests.get(url)
+            try:
+                requests.get(url)
+            except requests.ConnectionError:
+                print "Got a connection error"
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
