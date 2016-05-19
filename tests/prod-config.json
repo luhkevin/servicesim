@@ -45,7 +45,7 @@
       "uris": ["/redis"]
     },
     {
-      "id": "eta_v2-c",
+      "id": "eta-v2-c",
       "count": 1,
       "port": 31006,
       "lbport": "10006",
@@ -54,7 +54,7 @@
       "uris": ["/redis"]
     },
     {
-      "id": "eta_v3-c",
+      "id": "eta-v3-c",
       "count": 1,
       "port": 31006,
       "lbport": "10006",
@@ -126,12 +126,12 @@
     {
       "src": "lambda-c",
       "lb": "true",
-      "dest": "eta_v2-c"
+      "dest": "eta-v2-c"
     },
     {
       "src": "lambda-c",
       "lb": "true",
-      "dest": "eta_v3-c"
+      "dest": "eta-v3-c"
     },
     {
       "src": "delta-c",
@@ -146,7 +146,7 @@
       "dest": "pi-c"
     },
     {
-      "src": "eta_v2-c",
+      "src": "eta-v2-c",
       "dest": "omicron-c"
     },
     {

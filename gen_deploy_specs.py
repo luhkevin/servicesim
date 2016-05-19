@@ -17,7 +17,8 @@ def gen_spec(deploy_env, spec_output_dir, manual_spec_output_dir, config):
         cnode_id = route['id']
         node_routes_json = json.dumps(route['next_hops'])
 
-        root, _, _ = cnode_id.split('-')
+        cnode_toks = cnode_id.split('-')
+        root = cnode_toks[0]
         servicesim_spec = spec['servicesim']
         servicesim_spec['node_id'] = 'dev-' + str(cnode_id)
         servicesim_spec['node_type'] = 'dev-' + str(root)

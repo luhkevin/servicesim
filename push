@@ -12,6 +12,8 @@ docker tag netsil/servicesim:dev netsil/servicesim:dev-mu
 docker tag netsil/servicesim:dev netsil/servicesim:dev-omicron
 docker tag netsil/servicesim:dev netsil/servicesim:dev-theta
 docker tag netsil/servicesim:dev netsil/servicesim:dev-eta
+docker tag netsil/servicesim:dev netsil/servicesim:dev-eta-v2
+docker tag netsil/servicesim:dev netsil/servicesim:dev-eta-v3
 docker tag netsil/servicesim:dev netsil/servicesim:dev-zeta
 docker tag netsil/servicesim:dev netsil/servicesim:dev-iota
 docker tag netsil/servicesim:dev netsil/servicesim:dev-pi
@@ -27,6 +29,8 @@ docker push netsil/servicesim:dev-mu
 docker push netsil/servicesim:dev-omicron
 docker push netsil/servicesim:dev-theta
 docker push netsil/servicesim:dev-eta
+docker push netsil/servicesim:dev-eta-v2
+docker push netsil/servicesim:dev-eta-v3
 docker push netsil/servicesim:dev-zeta
 docker push netsil/servicesim:dev-iota
 docker push netsil/servicesim:dev-pi
