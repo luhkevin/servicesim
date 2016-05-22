@@ -98,7 +98,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                     hostname = ''
                     port = int(node['port'])
                     if deploy_env == 'marathon':
-                        hostname = 'dev-' + cnode_id + '.marathon.mesos'
+                        hostname = cnode_id + '.marathon.mesos'
                     inv_table[cnode_id].append(hostname + ':' + str(port))
                     node_table[cnode_id] = node
                     fill_attr_table(node, cnode_id, attributes)
@@ -115,7 +115,11 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
             route['id'] = node_id
             route['attr'] = attributes[node_id]
             route['next_hops'] = list()
-            route['port'] = node_table[node_id]['port']
+
+            # TODO: These can be refactored into a function
+            # Resolve ports
+            if node_table[node_id].has_key('port'):
+                route['port'] = node_table[node_id]['port']
 
             # Resolve manual or automatic deploy
             if node_table[node_id].has_key('deploy-type'):
@@ -136,7 +140,6 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                     dests = link['dest'].split(',')
                     for dest_node_id in dests:
                         # TODO: why are we using dest_node_id + '-0' and referencing node_table? Can't we use the original 'nodes' structure? We should be using the node_id_prefix instead of extending to the cnode id
-
                         if link.has_key('lb') and link['lb'] == 'true':
                             # Resolve load-balancer routing
                             hop = dict()
@@ -158,8 +161,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                                 hop['uris'] = node_table[dest_cnode_id]['uris']
                                 route['next_hops'].append(hop)
 
-                    # This section should be applied after the lb/standard routing table is constructed
-                    # We basically want to overwrite all the paths in the routing table with the faulty paths
+                    # Overwrite the uris in the routing table, if necessary
                     if 'function' in route:
                         faulty_uri = list()
                         # Resolve faulty routes

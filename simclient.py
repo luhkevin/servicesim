@@ -16,7 +16,7 @@ def parse_client_nodes(sim_config_path):
             if node_id in client_node_ids:
                 for uri in node['uris']:
                     port = node['port']
-                    client_urls.append('http://' + 'dev-' + node_id + '-0' + '.marathon.mesos' + ':' + str(port) + uri)
+                    client_urls.append('http://' + node_id + '-0' + '.marathon.mesos' + ':' + str(port) + uri)
     return client_urls
 
 def run(latency, config):

@@ -17,11 +17,10 @@ def gen_spec(deploy_env, spec_output_dir, manual_spec_output_dir, config):
         cnode_id = route['id']
         node_routes_json = json.dumps(route['next_hops'])
 
-        cnode_toks = cnode_id.split('-')
-        root = cnode_toks[0]
+        root = cnode_id.rpartition('-')[0]
         servicesim_spec = spec['servicesim']
-        servicesim_spec['node_id'] = 'dev-' + str(cnode_id)
-        servicesim_spec['node_type'] = 'dev-' + str(root)
+        servicesim_spec['node_id'] = str(cnode_id)
+        servicesim_spec['node_type'] = str(root)
         servicesim_spec['node_port'] = int(route['port'])
         servicesim_spec['node_function'] = 'regular'
         servicesim_spec['node_routes'] = str(node_routes_json)
