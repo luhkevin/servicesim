@@ -13,6 +13,7 @@ def fill_attr_table(node, node_id, attributes):
         node_attr['status'] = node['status']
     attributes[node_id] = node_attr
 
+# FIXME: We should really identify a node as container with another field in our config.json...not by how we name the node...
 def get_root_id(node_id):
     """If the node_id has a "-", which denotes a container id, then return the partition without the "-".
     Otherwise, return node_id
