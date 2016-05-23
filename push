@@ -1,38 +1,36 @@
 #!/bin/bash
 
-docker push netsil/servicesim:dev
+docker push netsil/servicesim:latest
 
-docker tag netsil/servicesim:dev netsil/servicesim:dev-alpha
-docker tag netsil/servicesim:dev netsil/servicesim:dev-beta
-docker tag netsil/servicesim:dev netsil/servicesim:dev-delta
-docker tag netsil/servicesim:dev netsil/servicesim:dev-gamma
-docker tag netsil/servicesim:dev netsil/servicesim:dev-kappa
-docker tag netsil/servicesim:dev netsil/servicesim:dev-lambda
-docker tag netsil/servicesim:dev netsil/servicesim:dev-mu
-docker tag netsil/servicesim:dev netsil/servicesim:dev-omicron
-docker tag netsil/servicesim:dev netsil/servicesim:dev-theta
-docker tag netsil/servicesim:dev netsil/servicesim:dev-eta
-docker tag netsil/servicesim:dev netsil/servicesim:dev-eta-v2
-docker tag netsil/servicesim:dev netsil/servicesim:dev-eta-v3
-docker tag netsil/servicesim:dev netsil/servicesim:dev-zeta
-docker tag netsil/servicesim:dev netsil/servicesim:dev-iota
-docker tag netsil/servicesim:dev netsil/servicesim:dev-pi
-docker tag netsil/servicesim:dev netsil/servicesim:dev-epsilon
+docker tag netsil/servicesim netsil/servicesim:alpha
+docker tag netsil/servicesim netsil/servicesim:beta
+docker tag netsil/servicesim netsil/servicesim:delta
+docker tag netsil/servicesim netsil/servicesim:gamma
+docker tag netsil/servicesim netsil/servicesim:kappa
+docker tag netsil/servicesim netsil/servicesim:lambda
+docker tag netsil/servicesim netsil/servicesim:mu
+docker tag netsil/servicesim netsil/servicesim:omicron
+docker tag netsil/servicesim netsil/servicesim:theta
+docker tag netsil/servicesim netsil/servicesim:eta
+docker tag netsil/servicesim netsil/servicesim:eta-v2
+docker tag netsil/servicesim netsil/servicesim:zeta
+docker tag netsil/servicesim netsil/servicesim:iota
+docker tag netsil/servicesim netsil/servicesim:pi
+docker tag netsil/servicesim netsil/servicesim:epsilon
 
-docker push netsil/servicesim:dev-alpha
-docker push netsil/servicesim:dev-beta
-docker push netsil/servicesim:dev-delta
-docker push netsil/servicesim:dev-gamma
-docker push netsil/servicesim:dev-kappa
-docker push netsil/servicesim:dev-lambda
-docker push netsil/servicesim:dev-mu
-docker push netsil/servicesim:dev-omicron
-docker push netsil/servicesim:dev-theta
-docker push netsil/servicesim:dev-eta
-docker push netsil/servicesim:dev-eta-v2
-docker push netsil/servicesim:dev-eta-v3
-docker push netsil/servicesim:dev-zeta
-docker push netsil/servicesim:dev-iota
-docker push netsil/servicesim:dev-pi
-docker push netsil/servicesim:dev-epsilon
+docker push netsil/servicesim:alpha
+docker push netsil/servicesim:beta
+docker push netsil/servicesim:delta
+docker push netsil/servicesim:gamma
+docker push netsil/servicesim:kappa
+docker push netsil/servicesim:lambda
+docker push netsil/servicesim:mu
+docker push netsil/servicesim:omicron
+docker push netsil/servicesim:theta
+docker push netsil/servicesim:eta
+docker push netsil/servicesim:eta-v2
+docker push netsil/servicesim:zeta
+docker push netsil/servicesim:iota
+docker push netsil/servicesim:pi
+docker push netsil/servicesim:epsilon
 

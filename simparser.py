@@ -106,6 +106,10 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
             node_attr = dict()
             node_id = node['id']
 
+            port = 8000
+            if 'port' in node.keys():
+                port = node['port']
+
             if '-' in node_id:
                 count = node['count']
                 for i in range(int(count)):
@@ -115,7 +119,6 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                         inv_table[cnode_id] = list()
 
                     hostname = ''
-                    port = int(node['port'])
                     if deploy_env == 'marathon':
                         hostname = cnode_id + '.marathon.mesos'
                     inv_table[cnode_id].append(hostname + ':' + str(port))
@@ -123,6 +126,9 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                     fill_attr_table(node, cnode_id, attributes)
             else:
                 node_table[node_id] = node
+                if node_id not in inv_table:
+                    inv_table[node_id] = list()
+                inv_table[node_id].append('localhost' + ':' + str(port))
                 fill_attr_table(node, node_id, attributes)
 
         print "Node table: "
