@@ -33,13 +33,15 @@ class Simnode():
         """This method loads this node's routing table (e.g. its next-hops) from the environment.
         It will look for the variable 'NODE_ROUTES', which it will store as a JSON string.
         """
-        print "Getting routes from the environment"
         NODE_ROUTES = str(os.environ.get('NODE_ROUTES', failobj='{}'))
 
         # Quick hack to replace escaped quotes. Marathon converts the quotes to '&quot;' when it set the env var...
         if NODE_ROUTES != {}:
+            print "Getting routes from the environment"
             NODE_ROUTES = NODE_ROUTES.replace('&quot;', '"')
-        self.routes = json.loads(NODE_ROUTES)
+            self.routes = json.loads(NODE_ROUTES)
+        else:
+            print "Getting routes from controller node"
 
     def set_stat(self, stat):
         stat_type = stat['type']

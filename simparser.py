@@ -13,6 +13,25 @@ def fill_attr_table(node, node_id, attributes):
         node_attr['status'] = node['status']
     attributes[node_id] = node_attr
 
+def get_root_id(node_id):
+    """If the node_id has a "-", which denotes a container id, then return the partition without the "-".
+    Otherwise, return node_id
+    """
+    if '-' in node_id:
+        return node_id.rpartition('-')[0]
+    else:
+        return node_id
+
+def get_full_id(node_id, index=-1):
+    """If the node_id has a "-", then return "<node_id>-0". Otherwise, return node_id"""
+    if index == -1:
+        index = 0
+
+    if '-' in node_id:
+        return node_id + '-' + str(index)
+    else:
+        return node_id
+
 # Transforms "servicesim.json" and the inventory file into "smap" -- servicemap.json
 def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
     """
@@ -106,6 +125,9 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                 node_table[node_id] = node
                 fill_attr_table(node, node_id, attributes)
 
+        print "Node table: "
+        pprint(node_table)
+
         print "Inventory table: "
         pprint(inv_table)
         # Create the servicemap structure
@@ -134,31 +156,35 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                 route['lbport'] = node_table[node_id]['lbport']
 
             for link in links:
-                node_id_prefix = node_id.rpartition('-')[0]
-                if node_id_prefix == link['src']:
+                root_node_id = get_root_id(node_id)
+                if root_node_id == link['src']:
                     # Check for multiple dests in a link entry
                     dests = link['dest'].split(',')
                     for dest_node_id in dests:
-                        # TODO: why are we using dest_node_id + '-0' and referencing node_table? Can't we use the original 'nodes' structure? We should be using the node_id_prefix instead of extending to the cnode id
+                        dest_true_id = get_full_id(dest_node_id)
                         if link.has_key('lb') and link['lb'] == 'true':
                             # Resolve load-balancer routing
                             hop = dict()
                             hop['id'] = dest_node_id
-                            hop['uris'] = node_table[dest_node_id + '-0']['uris']
+                            hop['uris'] = node_table[dest_true_id]['uris']
 
                             # Get load-balancer port from node
-                            lbport = node_table[dest_node_id + '-0']['lbport']
+                            lbport = node_table[dest_true_id]['lbport']
                             if deploy_env == 'marathon':
                                 hop['dests'] = ['marathon-lb.marathon.mesos' + ':' + str(lbport)]
                             route['next_hops'].append(hop)
                         else:
-                            count = node_table[dest_node_id + '-0']['count']
+                            # TODO: Refacto this whole part where we check for count...we should check for it before this
+                            count = 1
+                            if 'count' in node_table[dest_true_id]:
+                                count = node_table[dest_true_id]['count']
+
                             for i in range(int(count)):
                                 hop = dict()
-                                dest_cnode_id = dest_node_id + '-' + str(i)
-                                hop['id'] = dest_cnode_id
-                                hop['dests'] = inv_table[dest_cnode_id]
-                                hop['uris'] = node_table[dest_cnode_id]['uris']
+                                dest_true_id = get_full_id(dest_node_id, str(i))
+                                hop['id'] = dest_true_id
+                                hop['dests'] = inv_table[dest_true_id]
+                                hop['uris'] = node_table[dest_true_id]['uris']
                                 route['next_hops'].append(hop)
 
                     # Overwrite the uris in the routing table, if necessary
