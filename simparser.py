@@ -106,11 +106,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
         for node in nodes:
             node_attr = dict()
             node_id = node['id']
-
-            port = 8000
-            if 'port' in node.keys():
-                port = node['port']
-
+            port = node.get('port', 8000)
             if '-' in node_id:
                 count = node['count']
                 for i in range(int(count)):
@@ -122,6 +118,9 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                     hostname = ''
                     if deploy_env == 'marathon':
                         hostname = cnode_id + '.marathon.mesos'
+                    elif deploy_env == 'compose':
+                        hostname = cnode_id
+
                     inv_table[cnode_id].append(hostname + ':' + str(port))
                     node_table[cnode_id] = node
                     fill_attr_table(node, cnode_id, attributes)
@@ -129,7 +128,12 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                 node_table[node_id] = node
                 if node_id not in inv_table:
                     inv_table[node_id] = list()
-                inv_table[node_id].append('localhost' + ':' + str(port))
+
+                hostname = 'localhost'
+                if deploy_env == 'compose':
+                    hostname = node_id
+
+                inv_table[node_id].append(hostname + ':' + str(port))
                 fill_attr_table(node, node_id, attributes)
 
         print "Node table: "
@@ -181,7 +185,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                                 hop['dests'] = ['marathon-lb.marathon.mesos' + ':' + str(lbport)]
                             route['next_hops'].append(hop)
                         else:
-                            # TODO: Refacto this whole part where we check for count...we should check for it before this
+                            # TODO: Refactor this whole part where we check for count...we should check for it before this
                             count = 1
                             if 'count' in node_table[dest_true_id]:
                                 count = node_table[dest_true_id]['count']

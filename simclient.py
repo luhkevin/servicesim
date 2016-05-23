@@ -16,7 +16,7 @@ def parse_client_nodes(sim_config_path, deploy_env):
             node_id = node['id']
             if node_id in client_node_ids:
                 for uri in node['uris']:
-                    port = node['port']
+                    port = node.get('port', 8000)
                     hostname = node_id + '-0' + '.marathon.mesos'
                     if deploy_env == 'compose':
                         hostname = node_id
