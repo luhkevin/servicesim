@@ -1,51 +1,55 @@
 {
+  "global-config": 
+  {
+      "runtime": "container"
+  },
   "nodes": [
     {
-      "id": "alpha-c",
+      "id": "alpha",
       "count": 1,
       "port": 31000,
       "uris": ["/public-lb"]
     },
     {
-      "id": "beta-c",
+      "id": "beta",
       "count": 1,
       "port": 31001,
       "uris": ["/frontend"]
     },
     {
-      "id": "gamma-c",
+      "id": "gamma",
       "count": 1,
       "port": 31002,
       "uris": ["/internal-lb"]
     },
     {
-      "id": "delta-c",
+      "id": "delta",
       "count": 3,
       "port": 31003,
       "uris": ["/api-servers"]
     },
     {
-      "id": "epsilon-c",
+      "id": "epsilon",
       "count": 1,
       "port": 31004,
       "uris": ["/monitoring-service"]
     },
     {
-      "id": "zeta-c",
+      "id": "zeta",
       "count": 1,
       "port": 31005,
       "function": "faulty500",
       "uris": ["/gremlin"]
     },
     {
-      "id": "eta-c",
+      "id": "eta",
       "count": 3,
       "port": 31006,
       "lbport": "10006",
       "uris": ["/redis"]
     },
     {
-      "id": "eta-v2-c",
+      "id": "eta-v2",
       "count": 1,
       "port": 31006,
       "lbport": "10006",
@@ -54,7 +58,7 @@
       "uris": ["/redis"]
     },
     {
-      "id": "eta-v3-c",
+      "id": "eta-v3",
       "count": 1,
       "port": 31006,
       "lbport": "10006",
@@ -62,43 +66,43 @@
       "uris": ["/redis"]
     },
     {
-      "id": "theta-c",
+      "id": "theta",
       "count": 1,
       "port": 31007,
       "uris": ["/logging-service"]
     },
     {
-      "id": "iota-c",
+      "id": "iota",
       "count": 1,
       "port": 31008,
       "uris": ["/s3"]
     },
     {
-      "id": "kappa-c",
+      "id": "kappa",
       "count": 3,
       "port": 31009,
       "uris": ["/db"]
     },
     {
-      "id": "lambda-c",
+      "id": "lambda",
       "count": 1,
       "port": 31010,
       "uris": ["/auth"]
     },
     {
-      "id": "mu-c",
+      "id": "mu",
       "count": 1,
       "port": 31011,
       "uris": ["/configuration-management"]
     },
     {
-      "id": "omicron-c",
+      "id": "omicron",
       "count": 1,
       "port": 31012,
       "uris": ["/mail-service"]
     },
     {
-      "id": "pi-c",
+      "id": "pi",
       "count": 1,
       "port": 31013,
       "function": "faulty404",
@@ -107,56 +111,56 @@
   ],
   "links": [
     {
-      "src": "alpha-c",
-      "dest": "beta-c"
+      "src": "alpha",
+      "dest": "beta"
     },
     {
-      "src": "beta-c",
-      "dest": "gamma-c,eta-c"
+      "src": "beta",
+      "dest": "gamma,eta"
     },
     {
-      "src": "gamma-c",
-      "dest": "lambda-c,delta-c"
+      "src": "gamma",
+      "dest": "lambda,delta"
     },
     {
-      "src": "lambda-c",
+      "src": "lambda",
       "lb": "true",
-      "dest": "eta-c"
+      "dest": "eta"
     },
     {
-      "src": "lambda-c",
+      "src": "lambda",
       "lb": "true",
-      "dest": "eta-v2-c"
+      "dest": "eta-v2"
     },
     {
-      "src": "lambda-c",
+      "src": "lambda",
       "lb": "true",
-      "dest": "eta-v3-c"
+      "dest": "eta-v3"
     },
     {
-      "src": "delta-c",
-      "dest": "theta-c,omicron-c,kappa-c"
+      "src": "delta",
+      "dest": "theta,omicron,kappa"
     },
     {
-      "src": "theta-c",
-      "dest": "zeta-c,iota-c"
+      "src": "theta",
+      "dest": "zeta,iota"
     },
     {
-      "src": "omicron-c",
-      "dest": "pi-c"
+      "src": "omicron",
+      "dest": "pi"
     },
     {
-      "src": "eta-v2-c",
-      "dest": "omicron-c"
+      "src": "eta-v2",
+      "dest": "omicron"
     },
     {
-      "src": "mu-c",
-      "dest": "kappa-c"
+      "src": "mu",
+      "dest": "kappa"
     },
     {
-      "src": "kappa-c",
-      "dest": "epsilon-c"
+      "src": "kappa",
+      "dest": "epsilon"
     }
   ],
-  "clients": ["alpha-c", "mu-c"]
+  "clients": ["alpha", "mu"]
 }

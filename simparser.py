@@ -13,7 +13,6 @@ def fill_attr_table(node, node_id, attributes):
         node_attr['status'] = node['status']
     attributes[node_id] = node_attr
 
-# FIXME: We should really identify a node as container with another field in our config.json...not by how we name the node...
 def get_root_id(node_id):
     """If the node_id has a "-", which denotes a container id, then return the partition without the "-".
     Otherwise, return node_id
@@ -23,12 +22,12 @@ def get_root_id(node_id):
     else:
         return node_id
 
-def get_full_id(node_id, index=-1):
+def get_full_id(node_id, runtime='container', index=-1):
     """If the node_id has a "-", then return "<node_id>-0". Otherwise, return node_id"""
     if index == -1:
         index = 0
 
-    if '-' in node_id:
+    if runtime == 'container':
         return node_id + '-' + str(index)
     else:
         return node_id
@@ -98,16 +97,18 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
         client_node_table = sim_config['clients']
         nodes = sim_config['nodes']
         links = sim_config['links']
+	global_config = sim_config['global-config']
+
+	runtime = global_config['runtime']
 
         # Update node data from servicesim.json
-        # Update other attributes too -- latency and status code
         node_table = dict()
         attributes = dict()
         for node in nodes:
             node_attr = dict()
             node_id = node['id']
             port = node.get('port', 8000)
-            if '-' in node_id:
+	    if runtime == 'container':
                 count = node['count']
                 for i in range(int(count)):
                     # A 'cnode_id' is a container node id
@@ -172,7 +173,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
                     # Check for multiple dests in a link entry
                     dests = link['dest'].split(',')
                     for dest_node_id in dests:
-                        dest_true_id = get_full_id(dest_node_id)
+                        dest_true_id = get_full_id(dest_node_id, runtime)
                         if link.has_key('lb') and link['lb'] == 'true':
                             # Resolve load-balancer routing
                             hop = dict()
@@ -192,7 +193,7 @@ def route_parser(servicesim_config, inventory=None, deploy_env='marathon'):
 
                             for i in range(int(count)):
                                 hop = dict()
-                                dest_true_id = get_full_id(dest_node_id, str(i))
+                                dest_true_id = get_full_id(dest_node_id, runtime, str(i))
                                 hop['id'] = dest_true_id
                                 hop['dests'] = inv_table[dest_true_id]
                                 hop['uris'] = node_table[dest_true_id]['uris']

@@ -20,7 +20,7 @@ def parse_client_nodes(sim_config_path, deploy_env):
                     hostname = node_id + '-0' + '.marathon.mesos'
                     if deploy_env == 'compose':
                         hostname = node_id
-                    client_urls.append('http://' +  node_id + ':' + str(port) + uri)
+                    client_urls.append('http://' +  hostname + ':' + str(port) + uri)
     return client_urls
 
 def run(latency, config, deploy_env):
