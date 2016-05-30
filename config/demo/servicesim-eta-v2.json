@@ -1,0 +1,45 @@
+{
+  "args": [
+    "-a",
+    "0.0.0.0",
+    "-n",
+    "dev-eta",
+    "-p",
+    "8000",
+    "-f",
+    "regular"
+  ],
+  "container": {
+    "docker": {
+      "forcePullImage": true,
+      "image": "netsil/servicesim:dev-eta",
+      "network": "BRIDGE",
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 31006,
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "type": "DOCKER"
+  },
+  "cpus": 0.2,
+  "disk": 2.0,
+  "env": {
+    "NODE_ROUTES": "[{&quot;dests&quot;: [&quot;omicron-0.marathon.mesos:31012&quot;], &quot;id&quot;: &quot;omicron-0&quot;, &quot;uris&quot;: [&quot;/goblin/faulty&quot;]}]"
+  },
+  "id": "eta-v2-0",
+  "instances": 1,
+  "labels": {
+    "DCOS_PACKAGE_IS_FRAMEWORK": "false",
+    "DCOS_PACKAGE_METADATA": "eyJkZXNjcmlwdGlvbiI6ICJzZXJ2aWNlc2ltIiwgImltYWdlcyI6IHsiaWNvbi1sYXJnZSI6ICJodHRwczovL3d3dy5lbGFzdGljLmNvL3N0YXRpYy9pbWcvbG9nby1lbGFzdGljLnBuZyIsICJpY29uLW1lZGl1bSI6ICJodHRwczovL3d3dy5lbGFzdGljLmNvL3N0YXRpYy9pbWcvbG9nby1lbGFzdGljLnBuZyIsICJpY29uLXNtYWxsIjogImh0dHBzOi8vd3d3LmVsYXN0aWMuY28vc3RhdGljL2ltZy9sb2dvLWVsYXN0aWMucG5nIn0sICJtYWludGFpbmVyIjogInN1cHBvcnRAcHJhcW1hLmNvbSIsICJuYW1lIjogInNlcnZpY2VzaW0iLCAicGFja2FnaW5nVmVyc2lvbiI6ICIyLjAiLCAicG9zdEluc3RhbGxOb3RlcyI6ICJTZXJ2aWNlc2ltIHN1Y2Nlc2Z1bGx5IGluc3RhbGxlZC4iLCAicG9zdFVuaW5zdGFsbE5vdGVzIjogIlNlcnZpY2VzaW0gc3VjY2Vzc2Z1bGx5IHVuaW5zdGFsbGVkLiIsICJwcmVJbnN0YWxsTm90ZXMiOiAiTm8gcHJlLWluc3RhbGwgbm90ZXMuIiwgInNjbSI6ICJodHRwczovL2dpdGh1Yi5jb20vbHVoa2V2aW4vc2VydmljZXNpbS5naXQiLCAidGFncyI6IFsibWVzb3NwaGVyZSIsICJmcmFtZXdvcmsiLCAic2VydmljZXNpbSJdLCAidmVyc2lvbiI6ICIxLjAuMCJ9",
+    "DCOS_PACKAGE_NAME": "servicesim",
+    "DCOS_PACKAGE_REGISTRY_VERSION": "2.0.0-rc1",
+    "DCOS_PACKAGE_RELEASE": "0",
+    "DCOS_PACKAGE_VERSION": "1.0.0",
+    "HAPROXY_0_PORT": "10006",
+    "HAPROXY_GROUP": "external"
+  },
+  "mem": 128.0
+}
