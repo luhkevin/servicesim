@@ -58,14 +58,6 @@
       "uris": ["/redis"]
     },
     {
-      "id": "eta-v3",
-      "count": 1,
-      "port": 31006,
-      "lbport": "10006",
-      "deploy-type": "manual",
-      "uris": ["/redis"]
-    },
-    {
       "id": "theta",
       "count": 1,
       "port": 31007,
@@ -131,11 +123,6 @@
       "src": "lambda",
       "lb": "true",
       "dest": "eta-v2"
-    },
-    {
-      "src": "lambda",
-      "lb": "true",
-      "dest": "eta-v3"
     },
     {
       "src": "delta",
