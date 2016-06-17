@@ -12,6 +12,7 @@
       "network": "BRIDGE",
       "forcePullImage": true
     }
-  },
+  }, 
+  "acceptedResourceRoles": [ "slave_public", "*" ],
   "args": [ "python", "/opt/servicesim/simclient.py", "-l", "0.25", "-c", "/opt/servicesim/tests/prod-config.json"]
 }

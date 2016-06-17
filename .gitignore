@@ -1,1 +1,3 @@
 *.pyc
+config/demo/manual/servicesim-*
+config/demo/options/servicesim-*
