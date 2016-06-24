@@ -3,6 +3,7 @@
 apps=(
 alpha-0
 beta-0
+delta-0
 delta-1 
 delta-2    
 epsilon-0  
@@ -20,6 +21,7 @@ omicron-0
 pi-0       
 theta-0    
 zeta-0     
+servicesim-client
 )
 
 for app in ${apps[@]}
